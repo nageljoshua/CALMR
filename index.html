@@ -1,0 +1,2507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CALMR">
+    <meta name="theme-color" content="#667eea">
+    <link rel="manifest" href="#" id="manifest-placeholder">
+    <title>CALMR Check-In App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 28px;
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 16px;
+            font-size: 22px;
+        }
+
+        h3 {
+            color: #555;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .button-icon {
+            font-size: 24px;
+            min-width: 32px;
+            text-align: center;
+        }
+
+        .secondary-button {
+            background: #e0e7ff;
+            color: #667eea;
+        }
+
+        .secondary-button:hover {
+            background: #c7d2fe;
+        }
+
+        .danger-button {
+            background: #ef4444;
+        }
+
+        .danger-button:hover {
+            background: #dc2626;
+        }
+
+        .question-section {
+            margin-bottom: 24px;
+        }
+
+        .question-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .checkbox-item:hover {
+            background: #e0e7ff;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .radio-button {
+            flex: 1;
+            min-width: 80px;
+            padding: 12px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .radio-button:hover {
+            border-color: #667eea;
+            background: #e0e7ff;
+        }
+
+        .radio-button.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .expandable-text {
+            margin-top: 8px;
+        }
+
+        .expand-toggle {
+            color: #667eea;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 8px 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .expand-toggle:hover {
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #667eea;
+            transition: width 0.3s;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .nav-button {
+            flex: 1;
+        }
+
+        .back-button {
+            background: #94a3b8;
+        }
+
+        .back-button:hover {
+            background: #64748b;
+        }
+
+        .mantra-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-style: italic;
+            color: #92400e;
+        }
+
+        .info-box {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            color: #1e40af;
+            font-size: 14px;
+        }
+
+        .body-map {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .body-part {
+            padding: 12px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .body-part:hover {
+            border-color: #667eea;
+        }
+
+        .body-part.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .breathing-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: #667eea;
+            margin: 32px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            animation: breathe 6s infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .stat-card {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .home-icon {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .home-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .settings-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .settings-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .time-input {
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        .switch-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 51px;
+            height: 28px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: .4s;
+            border-radius: 28px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #667eea;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(23px);
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 12px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            .modal {
+                padding: 12px;
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="app"></div>
+    </div>
+
+    <script>
+        // ============= STATE MANAGEMENT =============
+        const state = {
+            currentView: 'home',
+            currentStep: 0,
+            sessionData: {},
+            history: [],
+            inProgressSession: null,
+            settings: {
+                notificationsEnabled: false,
+                morningReminderEnabled: false,
+                morningReminderTime: '08:00',
+                eveningReminderEnabled: false,
+                eveningReminderTime: '20:00'
+            }
+        };
+
+        // Load saved data from localStorage
+        function loadData() {
+            const saved = localStorage.getItem('calmrData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                state.history = data.history || [];
+                state.inProgressSession = data.inProgressSession || null;
+                state.settings = data.settings || state.settings;
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('calmrData', JSON.stringify({
+                history: state.history,
+                inProgressSession: state.inProgressSession,
+                settings: state.settings
+            }));
+        }
+
+        // Auto-save current session
+        function autoSave() {
+            state.inProgressSession = {
+                type: state.currentView,
+                step: state.currentStep,
+                data: { ...state.sessionData },
+                timestamp: new Date().toISOString()
+            };
+            saveData();
+        }
+
+        // Complete a session
+        function completeSession() {
+            const session = {
+                type: state.currentView,
+                data: { ...state.sessionData },
+                timestamp: new Date().toISOString()
+            };
+            state.history.push(session);
+            state.inProgressSession = null;
+            state.sessionData = {};
+            saveData();
+        }
+
+        // ============= RENDER FUNCTIONS =============
+        function render() {
+            const app = document.getElementById('app');
+            
+            switch(state.currentView) {
+                case 'home':
+                    app.innerHTML = renderHome();
+                    break;
+                case 'morning':
+                    app.innerHTML = renderMorningCheckin();
+                    break;
+                case 'evening':
+                    app.innerHTML = renderEveningCheckin();
+                    break;
+                case 'activated':
+                    app.innerHTML = renderActivated();
+                    break;
+                case 'stats':
+                    app.innerHTML = renderStats();
+                    break;
+                default:
+                    app.innerHTML = renderHome();
+            }
+            
+            attachEventListeners();
+        }
+
+        function renderHome() {
+            const hasInProgress = state.inProgressSession !== null;
+            const todayCheckins = getTodayCheckins();
+            
+            return `
+                <div class="settings-icon" onclick="openSettings()">⚙️</div>
+                <div class="card">
+                    <h1>CALMR Check-In</h1>
+                    <p class="subtitle">Your daily self-worth accountability system</p>
+                    
+                    ${!state.settings.notificationsEnabled ? `
+                        <div class="info-box" style="margin-bottom: 16px;">
+                            <strong>💡 Tip:</strong> Enable notifications to get daily reminders!
+                            <button onclick="openSettings()" style="background: #3b82f6; padding: 8px 16px; font-size: 14px; margin-top: 8px;">
+                                Set up reminders
+                            </button>
+                        </div>
+                    ` : ''}
+                    
+                    ${hasInProgress ? `
+                        <div class="info-box">
+                            You have an in-progress session from ${new Date(state.inProgressSession.timestamp).toLocaleString()}
+                            <div style="margin-top: 12px;">
+                                <button onclick="resumeSession()" style="background: #3b82f6; padding: 8px 16px; font-size: 14px;">
+                                    Resume Session
+                                </button>
+                                <button onclick="clearInProgress()" style="background: #94a3b8; padding: 8px 16px; font-size: 14px; margin-left: 8px;">
+                                    Start Fresh
+                                </button>
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">${state.history.length}</div>
+                            <div class="stat-label">Total Check-ins</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${todayCheckins.morning ? '✓' : '—'}</div>
+                            <div class="stat-label">Morning</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${todayCheckins.evening ? '✓' : '—'}</div>
+                            <div class="stat-label">Evening</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${getActivationCount()}</div>
+                            <div class="stat-label">This Week</div>
+                        </div>
+                    </div>
+
+                    <div class="button-group" style="margin-top: 24px;">
+                        <button onclick="startCheckin('morning')">
+                            <span class="button-icon">☀️</span>
+                            <span>Morning Check-in</span>
+                        </button>
+                        
+                        <button onclick="startCheckin('evening')">
+                            <span class="button-icon">🌙</span>
+                            <span>Evening Check-in</span>
+                        </button>
+                        
+                        <button onclick="startCheckin('activated')" class="danger-button">
+                            <span class="button-icon">🚨</span>
+                            <span>I'm Activated Now</span>
+                        </button>
+                        
+                        <button onclick="viewStats()" class="secondary-button">
+                            <span class="button-icon">📊</span>
+                            <span>View Stats & Export Data</span>
+                        </button>
+
+                        <button onclick="openClaudeProject()" class="secondary-button">
+                            <span class="button-icon">💬</span>
+                            <span>Chat with Claude</span>
+                        </button>
+                    </div>
+                </div>
+                ${renderSettingsModal()}
+            `;
+        }
+
+        function renderMorningCheckin() {
+            const steps = [
+                renderSleepQuality,
+                renderMoodEnergy,
+                renderCarryover,
+                renderLikelyTriggers,
+                renderTriggerPreparation,
+                renderLookingForward,
+                renderMorningSummary
+            ];
+
+            if (state.currentStep >= steps.length) {
+                return renderMorningSummary();
+            }
+
+            const progress = ((state.currentStep + 1) / steps.length) * 100;
+
+            return `
+                <div class="home-icon" onclick="confirmExit()">🏠</div>
+                <div class="card">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                    <h2>Morning Check-in</h2>
+                    ${steps[state.currentStep]()}
+                </div>
+            `;
+        }
+
+        function renderSleepQuality() {
+            return `
+                <div class="question-section">
+                    <label class="question-label">How did you sleep?</label>
+                    <div class="radio-group">
+                        ${['Poor', 'Fair', 'Good', 'Great'].map(option => `
+                            <div class="radio-button ${state.sessionData.sleep === option ? 'selected' : ''}" 
+                                 onclick="selectOption('sleep', '${option}')">
+                                ${option}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="nextStep()" class="nav-button">Next</button>
+                </div>
+            `;
+        }
+
+        function renderMoodEnergy() {
+            return `
+                <div class="question-section">
+                    <label class="question-label">Current mood/energy?</label>
+                    <div class="radio-group">
+                        ${['😔 Low', '😐 Okay', '🙂 Good', '😊 Great'].map(option => `
+                            <div class="radio-button ${state.sessionData.mood === option ? 'selected' : ''}" 
+                                 onclick="selectOption('mood', '${option}')">
+                                ${option}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="prevStep()" class="nav-button back-button">Back</button>
+                    <button onclick="nextStep()" class="nav-button">Next</button>
+                </div>
+            `;
+        }
+
+        function renderCarryover() {
+            const showText = state.sessionData.carryover === 'yes';
+            return `
+                <div class="question-section">
+                    <label class="question-label">Still feeling activated from yesterday?</label>
+                    <div class="radio-group">
+                        <div class="radio-button ${state.sessionData.carryover === 'yes' ? 'selected' : ''}" 
+                             onclick="selectOption('carryover', 'yes')">
+                            Yes
+                        </div>
+                        <div class="radio-button ${state.sessionData.carryover === 'no' ? 'selected' : ''}" 
+                             onclick="selectOption('carryover', 'no')">
+                            No
+                        </div>
+                    </div>
+                    ${showText ? `
+                        <div style="margin-top: 16px;">
+                            <textarea id="carryoverNote" placeholder="What are you still feeling?">${state.sessionData.carryoverNote || ''}</textarea>
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="prevStep()" class="nav-button back-button">Back</button>
+                    <button onclick="captureTextAndNext('carryoverNote', 'carryoverNote')" class="nav-button">Next</button>
+                </div>
+            `;
+        }
+
+        function renderLikelyTriggers() {
+            return `
+                <div class="question-section">
+                    <label class="question-label">Any likely triggers today?</label>
+                    <div class="checkbox-group">
+                        ${[
+                            'Stressful meetings/events',
+                            'Social situations',
+                            'Deadline pressure',
+                            'Family stress',
+                            'Body/appearance concerns'
+                        ].map(trigger => `
+                            <label class="checkbox-item">
+                                <input type="checkbox" 
+                                       ${(state.sessionData.triggers || []).includes(trigger) ? 'checked' : ''}
+                                       onchange="toggleCheckbox('triggers', '${trigger}')">
+                                <span>${trigger}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <div class="expandable-text">
+                        <div class="expand-toggle" onclick="toggleExpand('triggerNote')">
+                            📝 Add more context
+                        </div>
+                        <textarea id="triggerNote" class="hidden" placeholder="Describe the triggers...">${state.sessionData.triggerNote || ''}</textarea>
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="prevStep()" class="nav-button back-button">Back</button>
+                    <button onclick="captureTextAndNext('triggerNote', 'triggerNote')" class="nav-button">Next</button>
+                </div>
+            `;
+        }
+
+        function renderTriggerPreparation() {
+            const triggers = state.sessionData.triggers || [];
+            
+            // Skip this screen if no triggers selected
+            if (triggers.length === 0) {
+                state.currentStep++;
+                return renderLookingForward();
+            }
+
+            return `
+                <div class="question-section">
+                    <label class="question-label">Let's prepare for today's challenges</label>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+                        You identified some potential triggers. Here's how to meet them:
+                    </p>
+                    
+                    ${triggers.includes('Stressful meetings/events') ? `
+                        <div style="padding: 16px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; margin-bottom: 12px;">
+                            <strong>📅 For stressful meetings/events:</strong>
+                            <p style="font-size: 14px; margin-top: 8px; color: #92400e;">
+                                "If perfectionism hits, I'll remember: my worth isn't determined by avoiding all mistakes. 
+                                I can catch myself and use the feedback reality check."
+                            </p>
+                        </div>
+                    ` : ''}
+
+                    ${triggers.includes('Social situations') ? `
+                        <div style="padding: 16px; background: #dbeafe; border-left: 4px solid #3b82f6; border-radius: 8px; margin-bottom: 12px;">
+                            <strong>👥 For social situations:</strong>
+                            <p style="font-size: 14px; margin-top: 8px; color: #1e40af;">
+                                "If I start approval-scanning, I'll remember: I can just be here existing. 
+                                Their behavior is situational, not about my worth. I don't have to prove anything."
+                            </p>
+                        </div>
+                    ` : ''}
+
+                    ${triggers.includes('Deadline pressure') ? `
+                        <div style="padding: 16px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; margin-bottom: 12px;">
+                            <strong>⏰ For deadline pressure:</strong>
+                            <p style="font-size: 14px; margin-top: 8px; color: #92400e;">
+                                "If overwhelm hits, I'll ask: Would an outsider think I'm being extra? 
+                                What really happens if this isn't perfect? Good enough is often wiser."
+                            </p>
+                        </div>
+                    ` : ''}
+
+                    ${triggers.includes('Family stress') ? `
+                        <div style="padding: 16px; background: #e0e7ff; border-left: 4px solid #667eea; border-radius: 8px; margin-bottom: 12px;">
+                            <strong>👨‍👩‍👧 For family stress:</strong>
+                            <p style="font-size: 14px; margin-top: 8px; color: #4338ca;">
+                                "If things get tense, I'll pause and breathe. I can handle hard things. 
+                                My worth isn't determined by controlling everyone's experience."
+                            </p>
+                        </div>
+                    ` : ''}
+
+                    ${triggers.includes('Body/appearance concerns') ? `
+                        <div style="padding: 16px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; margin-bottom: 12px;">
+                            <strong>🪞 For body/appearance concerns:</strong>
+                            <p style="font-size: 14px; margin-top: 8px; color: #92400e;">
+                                "If body shame hits, I'll recognize this is perfectionism trying to prevent judgment. 
+                                My worth isn't determined by appearance. I can investigate the urge if it comes."
+                            </p>
+                        </div>
+                    ` : ''}
+
+                    <div class="info-box" style="margin-top: 16px;">
+                        <strong>Remember:</strong> You have your CALMR tools ready. You can handle what comes today.
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="prevStep()" class="nav-button back-button">Back</button>
+                    <button onclick="nextStep()" class="nav-button">Next</button>
+                </div>
+            `;
+        }
+
+        function renderLookingForward() {
+            return `
+                <div class="question-section">
+                    <label class="question-label">What's one thing to look forward to today?</label>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+                        Start your day with something positive to anticipate
+                    </p>
+                    <div class="radio-group">
+                        ${[
+                            'Time with family',
+                            'Good meal or coffee',
+                            'Work progress',
+                            'Exercise/movement',
+                            'Learning something',
+                            'Quiet moment',
+                            'Other'
+                        ].map(item => `
+                            <div class="radio-button ${state.sessionData.lookingForward === item ? 'selected' : ''}" 
+                                 onclick="selectOption('lookingForward', '${item}')"
+                                 style="flex: 1 1 45%; text-align: center;">
+                                ${item}
+                            </div>
+                        `).join('')}
+                    </div>
+                    ${state.sessionData.lookingForward === 'Other' ? `
+                        <div style="margin-top: 16px;">
+                            <textarea id="lookingForwardDetail" placeholder="What are you looking forward to?">${state.sessionData.lookingForwardDetail || ''}</textarea>
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="prevStep()" class="nav-button back-button">Back</button>
+                    <button onclick="captureTextAndNext('lookingForwardDetail', 'lookingForwardDetail')" class="nav-button">Complete Check-in</button>
+                </div>
+            `;
+        }
+
+        function renderQuickWin() {
+            return `
+                <div class="question-section">
+                    <label class="question-label">One thing that went well yesterday</label>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+                        Counter your negativity bias - name something positive!
+                    </p>
+                    <div class="radio-group">
+                        ${[
+                            'Used my tools when activated',
+                            'Had a good conversation',
+                            'Took care of myself',
+                            'Made progress on work',
+                            'Good family time',
+                            'Other'
+                        ].map(win => `
+                            <div class="radio-button ${state.sessionData.quickWin === win ? 'selected' : ''}" 
+                                 onclick="selectOption('quickWin', '${win}')"
+                                 style="flex: 1 1 45%; text-align: center;">
+                                ${win}
+                            </div>
+                        `).join('')}
+                    </div>
+                    ${state.sessionData.quickWin === 'Other' ? `
+                        <div style="margin-top: 16px;">
+                            <textarea id="quickWinDetail" placeholder="What went well?">${state.sessionData.quickWinDetail || ''}</textarea>
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="prevStep()" class="nav-button back-button">Back</button>
+                    <button onclick="captureTextAndNext('quickWinDetail', 'quickWinDetail')" class="nav-button">Complete Check-in</button>
+                </div>
+            `;
+        }
+
+        function renderMorningSummary() {
+            completeSession();
+            return `
+                <div class="question-section">
+                    <h2>✅ Morning Check-in Complete!</h2>
+                    <p style="color: #666; margin: 16px 0;">
+                        Great job starting your day with intention. Remember:
+                    </p>
+                    <div class="mantra-box">
+                        "I am okay. I am good enough. My worth is not determined by perfect performance."
+                    </div>
+                    <p style="font-size: 14px; color: #666;">
+                        Your CALMR tools are ready when you need them today.
+                    </p>
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="goHome()" class="nav-button">Back to Home</button>
+                </div>
+            `;
+        }
+
+        function renderEveningCheckin() {
+            const steps = [
+                renderDayRating,
+                renderSystemsActivated,
+                renderToolUsage,
+                renderPatternNotice,
+                renderEveningWin,
+                renderEveningSummary
+            ];
+
+            if (state.currentStep >= steps.length) {
+                return renderEveningSummary();
+            }
+
+            const progress = ((state.currentStep + 1) / steps.length) * 100;
+
+            return `
+                <div class="home-icon" onclick="confirmExit()">🏠</div>
+                <div class="card">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                    <h2>Evening Check-in</h2>
+                    ${steps[state.currentStep]()}
+                </div>
+            `;
+        }
+
+        function renderDayRating() {
+            return `
+                <div class="question-section">
+                    <label class="question-label">How was your day overall?</label>
+                    <div class="radio-group">
+                        ${['😔 Rough', '😐 Okay', '🙂 Good', '😊 Great'].map(option => `
+                            <div class="radio-button ${state.sessionData.dayRating === option ? 'selected' : ''}" 
+                                 onclick="selectOption('dayRating', '${option}')">
+                                ${option}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="nextStep()" class="nav-button">Next</button>
+                </div>
+            `;
+        }
+
+        function renderSystemsActivated() {
+            return `
+                <div class="question-section">
+                    <label class="question-label">Did any systems activate today?</label>
+                    <div class="checkbox-group">
+                        ${[
+                            '🎯 Perfectionism',
+                            '💔 Rejection/approval-seeking',
+                            '🌀 Habit urge',
+                            '✨ None - calm day'
+                        ].map(system => `
+                            <label class="checkbox-item">
+                                <input type="checkbox" 
+                                       ${(state.sessionData.systems || []).includes(system) ? 'checked' : ''}
+                                       onchange="toggleCheckbox('systems', '${system}')">
+                                <span>${system}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="prevStep()" class="nav-button back-button">Back</button>
+                    <button onclick="nextStep()" class="nav-button">Next</button>
+                </div>
+            `;
+        }
+
+        function renderToolUsage() {
+            const hadActivation = state.sessionData.systems && 
+                                  state.sessionData.systems.length > 0 && 
+                                  !state.sessionData.systems.includes('✨ None - calm day');
+            
+            if (!hadActivation) {
+                state.currentStep++;
+                return renderPatternNotice();
+            }
+
+            return `
+                <div class="question-section">
+                    <label class="question-label">Did you catch it when you were activated?</label>
+                    <div class="radio-group">
+                        <div class="radio-button ${state.sessionData.caughtIt === 'yes' ? 'selected' : ''}" 
+                             onclick="selectOption('caughtIt', 'yes')">
+                            Yes
+                        </div>
+                        <div class="radio-button ${state.sessionData.caughtIt === 'no' ? 'selected' : ''}" 
+                             onclick="selectOption('caughtIt', 'no')">
+                            No
+                        </div>
+                    </div>
+
+                    ${state.sessionData.caughtIt === 'yes' ? `
+                        <div style="margin-top: 20px;">
+                            <label class="question-label">Which tools did you use?</label>
+                            <div class="checkbox-group">
+                                ${[
+                                    'CALMR system',
+                                    'Chatted with Claude',
+                                    'Outsider perspective',
+                                    'Just paused and noticed',
+                                    'Other'
+                                ].map(tool => `
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" 
+                                               ${(state.sessionData.toolsUsed || []).includes(tool) ? 'checked' : ''}
+                                               onchange="toggleCheckbox('toolsUsed', '${tool}')">
+                                        <span>${tool}</span>
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : state.sessionData.caughtIt === 'no' ? `
+                        <div class="expandable-text" style="margin-top: 16px;">
+                            <div class="expand-toggle" onclick="toggleExpand('missedNote')">
+                                📝 What do you notice about missing it?
+                            </div>
+                            <textarea id="missedNote" class="hidden" placeholder="Any insights...">${state.sessionData.missedNote || ''}</textarea>
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="prevStep()" class="nav-button back-button">Back</button>
+                    <button onclick="captureTextAndNext('missedNote', 'missedNote')" class="nav-button">Next</button>
+                </div>
+            `;
+        }
+
+        function renderPatternNotice() {
+            return `
+                <div class="question-section">
+                    <label class="question-label">Any patterns you noticed today?</label>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+                        Optional - but helpful for tracking what triggers you
+                    </p>
+                    <div class="expandable-text">
+                        <div class="expand-toggle" onclick="toggleExpand('patternNote')">
+                            📝 Add observations
+                        </div>
+                        <textarea id="patternNote" class="hidden" placeholder="What did you notice?">${state.sessionData.patternNote || ''}</textarea>
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="prevStep()" class="nav-button back-button">Back</button>
+                    <button onclick="captureTextAndNext('patternNote', 'patternNote')" class="nav-button">Next</button>
+                </div>
+            `;
+        }
+
+        function renderEveningWin() {
+            return `
+                <div class="question-section">
+                    <label class="question-label">One thing that went well today</label>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+                        End the day acknowledging something positive
+                    </p>
+                    <div class="radio-group">
+                        ${[
+                            'Used my tools',
+                            'Good social interaction',
+                            'Self-care moment',
+                            'Work progress',
+                            'Family connection',
+                            'Other'
+                        ].map(win => `
+                            <div class="radio-button ${state.sessionData.eveningWin === win ? 'selected' : ''}" 
+                                 onclick="selectOption('eveningWin', '${win}')"
+                                 style="flex: 1 1 45%; text-align: center;">
+                                ${win}
+                            </div>
+                        `).join('')}
+                    </div>
+                    ${state.sessionData.eveningWin === 'Other' ? `
+                        <div style="margin-top: 16px;">
+                            <textarea id="eveningWinDetail" placeholder="What went well?">${state.sessionData.eveningWinDetail || ''}</textarea>
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="prevStep()" class="nav-button back-button">Back</button>
+                    <button onclick="captureTextAndNext('eveningWinDetail', 'eveningWinDetail')" class="nav-button">Complete Check-in</button>
+                </div>
+            `;
+        }
+
+        function renderEveningSummary() {
+            completeSession();
+            return `
+                <div class="question-section">
+                    <h2>✅ Evening Check-in Complete!</h2>
+                    <p style="color: #666; margin: 16px 0;">
+                        You showed up for yourself today. That matters.
+                    </p>
+                    <div class="mantra-box">
+                        "My worth is not determined by perfect performance. I am still a good person."
+                    </div>
+                    <p style="font-size: 14px; color: #666;">
+                        Rest well tonight. Tomorrow is a new day.
+                    </p>
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="goHome()" class="nav-button">Back to Home</button>
+                </div>
+            `;
+        }
+
+        function renderActivated() {
+            if (state.currentStep === 0) {
+                return renderActivatedSelection();
+            }
+
+            // Handle different activation types
+            const activationType = state.sessionData.activationType;
+            
+            if (activationType === '🎯 Perfectionism') {
+                return renderPerfectionismFlow();
+            } else if (activationType === '💔 Rejection') {
+                return renderRejectionFlow();
+            } else if (activationType === '🌀 Habit Urge') {
+                return renderHabitUrgeFlow();
+            } else if (activationType === '😔 Already Engaged') {
+                return renderAlreadyEngagedFlow();
+            }
+
+            return renderActivatedSelection();
+        }
+
+        function renderActivatedSelection() {
+            return `
+                <div class="home-icon" onclick="confirmExit()">🏠</div>
+                <div class="card">
+                    <h2>What's happening right now?</h2>
+                    <p class="subtitle">Select what you're experiencing</p>
+                    <div class="button-group">
+                        <button onclick="selectActivationType('🎯 Perfectionism')">
+                            <span class="button-icon">🎯</span>
+                            <span>Perfectionism attack</span>
+                        </button>
+                        <button onclick="selectActivationType('💔 Rejection')">
+                            <span class="button-icon">💔</span>
+                            <span>Rejection/approval-seeking pain</span>
+                        </button>
+                        <button onclick="selectActivationType('🌀 Habit Urge')">
+                            <span class="button-icon">🌀</span>
+                            <span>Having a habit urge (before)</span>
+                        </button>
+                        <button onclick="selectActivationType('😔 Already Engaged')">
+                            <span class="button-icon">😔</span>
+                            <span>Already engaged in habit (after)</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderPerfectionismFlow() {
+            const steps = [
+                renderCapture,
+                renderAssuage,
+                renderLabelPerfectionism,
+                renderModifyPerfectionism,
+                renderReassure
+            ];
+
+            const progress = ((state.currentStep) / steps.length) * 100;
+
+            return `
+                <div class="home-icon" onclick="confirmExit()">🏠</div>
+                <div class="card">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                    <h2>CALMR: Perfectionism</h2>
+                    ${steps[state.currentStep - 1]()}
+                </div>
+            `;
+        }
+
+        function renderRejectionFlow() {
+            const steps = [
+                renderCapture,
+                renderAssuage,
+                renderLabelRejection,
+                renderModifyRejection,
+                renderReassure
+            ];
+
+            const progress = ((state.currentStep) / steps.length) * 100;
+
+            return `
+                <div class="home-icon" onclick="confirmExit()">🏠</div>
+                <div class="card">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                    <h2>CALMR: Rejection Pain</h2>
+                    ${steps[state.currentStep - 1]()}
+                </div>
+            `;
+        }
+
+        function renderHabitUrgeFlow() {
+            const steps = [
+                renderCapture,
+                renderAssuage,
+                renderLabelHabit,
+                renderModifyHabitUrge,
+                renderReassure
+            ];
+
+            const progress = ((state.currentStep) / steps.length) * 100;
+
+            return `
+                <div class="home-icon" onclick="confirmExit()">🏠</div>
+                <div class="card">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                    <h2>CALMR: Habit Urge</h2>
+                    ${steps[state.currentStep - 1]()}
+                </div>
+            `;
+        }
+
+        function renderAlreadyEngagedFlow() {
+            const steps = [
+                renderNameFeelings,
+                renderOutsiderAfterHabit,
+                renderReassureAfterHabit
+            ];
+
+            const progress = ((state.currentStep) / steps.length) * 100;
+
+            return `
+                <div class="home-icon" onclick="confirmExit()">🏠</div>
+                <div class="card">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                    <h2>After the Habit</h2>
+                    ${steps[state.currentStep - 1]()}
+                </div>
+            `;
+        }
+
+        // ============= CALMR STEP COMPONENTS =============
+
+        function renderCapture() {
+            return `
+                <div class="question-section">
+                    <h3>C - CAPTURE (30 seconds)</h3>
+                    <label class="question-label">Where do you feel this in your body?</label>
+                    <div class="body-map">
+                        ${['Chest', 'Jaw', 'Heart', 'Stomach', 'Shoulders', 'Throat', 'Head', 'Other'].map(part => `
+                            <div class="body-part ${(state.sessionData.bodyParts || []).includes(part) ? 'selected' : ''}"
+                                 onclick="toggleBodyPart('${part}')">
+                                ${part}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <label class="question-label">What sensations?</label>
+                        <div class="checkbox-group">
+                            ${['Tight', 'Heavy', 'Racing', 'Clenched', 'Hot', 'Shaky'].map(sensation => `
+                                <label class="checkbox-item">
+                                    <input type="checkbox" 
+                                           ${(state.sessionData.sensations || []).includes(sensation) ? 'checked' : ''}
+                                           onchange="toggleCheckbox('sensations', '${sensation}')">
+                                    <span>${sensation}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="prevStep()" class="nav-button back-button">Back</button>
+                    <button onclick="nextStep()" class="nav-button">Next</button>
+                </div>
+            `;
+        }
+
+        function renderAssuage() {
+            return `
+                <div class="question-section">
+                    <h3>A - ASSUAGE (1-2 minutes)</h3>
+                    <p style="color: #666; margin-bottom: 20px;">
+                        Let's physically regulate and soothe your nervous system
+                    </p>
+                    
+                    <div class="breathing-circle">Breathe</div>
+                    
+                    <div class="info-box">
+                        <strong>Try this now:</strong>
+                        <ul style="margin-top: 8px; margin-left: 20px;">
+                            <li>Take 3 deep breaths</li>
+                            <li>Feel your feet on the floor</li>
+                            <li>Put your hand on your chest</li>
+                        </ul>
+                    </div>
+
+                    <div class="mantra-box">
+                        "I am okay. I am good enough."
+                        <br><br>
+                        "This is hard, and I'm handling it."
+                    </div>
+
+                    <p style="font-size: 14px; color: #666; text-align: center; margin-top: 16px;">
+                        Take your time. Click Next when you're ready.
+                    </p>
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="prevStep()" class="nav-button back-button">Back</button>
+                    <button onclick="nextStep()" class="nav-button">Next</button>
+                </div>
+            `;
+        }
+
+        function renderLabelPerfectionism() {
+            return `
+                <div class="question-section">
+                    <h3>L - LABEL (30 sec - 1 min)</h3>
+                    <label class="question-label">What are you feeling?</label>
+                    <div class="checkbox-group">
+                        ${['Anxious', 'Ashamed', 'Overwhelmed', 'Inadequate', 'Frustrated', 'Angry'].map(feeling => `
+                            <label class="checkbox-item">
+                                <input type="checkbox" 
+                                       ${(state.sessionData.feelings || []).includes(feeling) ? 'checked' : ''}
+                                       onchange="toggleCheckbox('feelings', '${feeling}')">
+                                <span>${feeling}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <div class="expandable-text">
+                        <div class="expand-toggle" onclick="toggleExpand('feelingsNote')">
+                            📝 Add more detail
+                        </div>
+                        <textarea id="feelingsNote" class="hidden" placeholder="Other feelings...">${state.sessionData.feelingsNote || ''}</textarea>
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="prevStep()" class="nav-button back-button">Back</button>
+                    <button onclick="captureTextAndNext('feelingsNote', 'feelingsNote')" class="nav-button">Next</button>
+                </div>
+            `;
+        }
+
+        function renderLabelRejection() {
+            return renderLabelPerfectionism(); // Same feelings apply
+        }
+
+        function renderLabelHabit() {
+            return renderLabelPerfectionism(); // Same feelings apply
+        }
+
+        function renderModifyPerfectionism() {
+            return `
+                <div class="question-section">
+                    <h3>M - MODIFY (3-5 minutes)</h3>
+                    <p style="color: #666; margin-bottom: 16px;">
+                        Choose how you want to work through this:
+                    </p>
+                    
+                    <div class="button-group">
+                        <button onclick="openClaudeWithContext()" style="background: #3b82f6;">
+                            <span class="button-icon">💬</span>
+                            <span>Start a chat with Claude</span>
+                        </button>
+                    </div>
+
+                    <p style="text-align: center; margin: 16px 0; color: #666;">— or —</p>
+
+                    <label class="question-label">What is Perfect Pete saying?</label>
+                    <div class="checkbox-group">
+                        ${[
+                            'I made a mistake',
+                            'I got feedback/criticism',
+                            'I have so much to do',
+                            'Someone was rude to me',
+                            'I must do this perfectly'
+                        ].map(thought => `
+                            <label class="checkbox-item">
+                                <input type="checkbox" 
+                                       ${(state.sessionData.peteThoughts || []).includes(thought) ? 'checked' : ''}
+                                       onchange="toggleCheckbox('peteThoughts', '${thought}')">
+                                <span>${thought}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+
+                    ${renderPerfectionismQuestions()}
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="prevStep()" class="nav-button back-button">Back</button>
+                    <button onclick="nextStep()" class="nav-button">Next</button>
+                </div>
+            `;
+        }
+
+        function renderPerfectionismQuestions() {
+            const thoughts = state.sessionData.peteThoughts || [];
+            
+            let questions = '';
+
+            if (thoughts.includes('I made a mistake') || thoughts.includes('I got feedback/criticism')) {
+                questions += `
+                    <div style="margin-top: 20px; padding: 16px; background: #f8fafc; border-radius: 8px;">
+                        <strong>Feedback Reality Check:</strong>
+                        <div style="margin-top: 12px;">
+                            <label style="display: block; font-size: 14px; color: #666; margin-bottom: 4px;">
+                                What actually happened? (their exact words/actions)
+                            </label>
+                            <textarea id="whatHappened" placeholder="Just the facts...">${state.sessionData.whatHappened || ''}</textarea>
+                        </div>
+                        <div style="margin-top: 12px;">
+                            <label style="display: block; font-size: 14px; color: #666; margin-bottom: 4px;">
+                                What did my brain translate it to mean?
+                            </label>
+                            <textarea id="whatItMeant" placeholder="About my worth/competence...">${state.sessionData.whatItMeant || ''}</textarea>
+                        </div>
+                        <div style="margin-top: 12px;">
+                            <label style="display: block; font-size: 14px; color: #666; margin-bottom: 4px;">
+                                What would a neutral outsider say?
+                            </label>
+                            <textarea id="outsiderView" placeholder="Normal perspective...">${state.sessionData.outsiderView || ''}</textarea>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (thoughts.includes('I have so much to do') || thoughts.includes('I must do this perfectly')) {
+                questions += `
+                    <div style="margin-top: 20px; padding: 16px; background: #f8fafc; border-radius: 8px;">
+                        <strong>Good Enough Filter:</strong>
+                        <div style="margin-top: 12px;">
+                            <label style="display: block; font-size: 14px; color: #666; margin-bottom: 8px;">
+                                Would an outsider think I'm being extra with this effort?
+                            </label>
+                            <div class="radio-group">
+                                <div class="radio-button ${state.sessionData.beingExtra === 'yes' ? 'selected' : ''}" 
+                                     onclick="selectOption('beingExtra', 'yes')">Yes</div>
+                                <div class="radio-button ${state.sessionData.beingExtra === 'no' ? 'selected' : ''}" 
+                                     onclick="selectOption('beingExtra', 'no')">No</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 12px;">
+                            <label style="display: block; font-size: 14px; color: #666; margin-bottom: 4px;">
+                                If this doesn't get done perfectly, what actually happens?
+                            </label>
+                            <textarea id="whatHappensImperfect" placeholder="Real consequences...">${state.sessionData.whatHappensImperfect || ''}</textarea>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (thoughts.includes('Someone was rude to me')) {
+                questions += `
+                    <div style="margin-top: 20px; padding: 16px; background: #f8fafc; border-radius: 8px;">
+                        <strong>Appropriate Anger Check:</strong>
+                        <div class="checkbox-group" style="margin-top: 12px;">
+                            ${[
+                                'They treated me like an object',
+                                'That was unnecessarily harsh',
+                                'I have a right to be annoyed',
+                                'Their behavior was about them, not me'
+                            ].map(check => `
+                                <label class="checkbox-item">
+                                    <input type="checkbox" 
+                                           ${(state.sessionData.angerChecks || []).includes(check) ? 'checked' : ''}
+                                           onchange="toggleCheckbox('angerChecks', '${check}')">
+                                    <span>${check}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            return questions;
+        }
+
+        function renderModifyRejection() {
+            return `
+                <div class="question-section">
+                    <h3>M - MODIFY (3-5 minutes)</h3>
+                    <p style="color: #666; margin-bottom: 16px;">
+                        Choose how you want to work through this:
+                    </p>
+                    
+                    <div class="button-group">
+                        <button onclick="openClaudeWithContext()" style="background: #3b82f6;">
+                            <span class="button-icon">💬</span>
+                            <span>Start a chat with Claude</span>
+                        </button>
+                    </div>
+
+                    <p style="text-align: center; margin: 16px 0; color: #666;">— or —</p>
+
+                    <div style="padding: 16px; background: #f8fafc; border-radius: 8px; margin-bottom: 16px;">
+                        <strong>Situational vs Dispositional Check:</strong>
+                        <p style="font-size: 14px; color: #666; margin: 8px 0;">
+                            Is this about me (dispositional) or about circumstances/them/environment (situational)?
+                        </p>
+                        <div style="margin-top: 12px;">
+                            <label style="display: block; font-size: 14px; margin-bottom: 8px;">
+                                Alternative explanations to consider:
+                            </label>
+                            <div class="checkbox-group">
+                                ${[
+                                    'They\'re tired or distracted',
+                                    'They\'re dealing with their own stuff',
+                                    'Setting made interaction awkward',
+                                    'Normal conversation flow',
+                                    'They\'re bad at showing friendship',
+                                    'They were being rude (about them, not me)'
+                                ].map(explanation => `
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" 
+                                               ${(state.sessionData.alternatives || []).includes(explanation) ? 'checked' : ''}
+                                               onchange="toggleCheckbox('alternatives', '${explanation}')">
+                                        <span>${explanation}</span>
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="padding: 16px; background: #f8fafc; border-radius: 8px; margin-bottom: 16px;">
+                        <strong>Reality Perspective Check:</strong>
+                        <div class="checkbox-group" style="margin-top: 12px;">
+                            ${[
+                                'I\'m imagining harsh judgments without evidence',
+                                'I\'m being unfair by assuming they\'re judging me',
+                                'They might be thinking neutral/positive things'
+                            ].map(check => `
+                                <label class="checkbox-item">
+                                    <input type="checkbox" 
+                                           ${(state.sessionData.realityChecks || []).includes(check) ? 'checked' : ''}
+                                           onchange="toggleCheckbox('realityChecks', '${check}')">
+                                    <span>${check}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div style="padding: 16px; background: #f8fafc; border-radius: 8px;">
+                        <strong>Evidence I'm Already Liked:</strong>
+                        <p style="font-size: 14px; color: #666; margin: 8px 0;">
+                            For established relationships, what evidence do you have?
+                        </p>
+                        <div class="expandable-text">
+                            <div class="expand-toggle" onclick="toggleExpand('evidenceNote')">
+                                📝 Note the evidence
+                            </div>
+                            <textarea id="evidenceNote" class="hidden" placeholder="They invited me, they've reached out before, they've shared personal things...">${state.sessionData.evidenceNote || ''}</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="prevStep()" class="nav-button back-button">Back</button>
+                    <button onclick="captureTextAndNext('evidenceNote', 'evidenceNote')" class="nav-button">Next</button>
+                </div>
+            `;
+        }
+
+        function renderModifyHabitUrge() {
+            return `
+                <div class="question-section">
+                    <h3>M - MODIFY (3-5 minutes)</h3>
+                    <p style="color: #666; margin-bottom: 16px;">
+                        Let's investigate what's really happening:
+                    </p>
+                    
+                    <div class="button-group" style="margin-bottom: 20px;">
+                        <button onclick="openClaudeWithContext()" style="background: #3b82f6;">
+                            <span class="button-icon">💬</span>
+                            <span>Chat with Claude for support</span>
+                        </button>
+                    </div>
+
+                    <p style="text-align: center; margin: 16px 0; color: #666;">— or work through it here —</p>
+
+                    <div style="padding: 16px; background: #f8fafc; border-radius: 8px; margin-bottom: 16px;">
+                        <strong>What triggered this urge?</strong>
+                        <div class="checkbox-group" style="margin-top: 12px;">
+                            ${[
+                                'Stressed',
+                                'Bored',
+                                'Overwhelmed',
+                                'Body shame',
+                                'Procrastinating',
+                                'Feeling disconnected'
+                            ].map(trigger => `
+                                <label class="checkbox-item">
+                                    <input type="checkbox" 
+                                           ${(state.sessionData.urgeTriggerse || []).includes(trigger) ? 'checked' : ''}
+                                           onchange="toggleCheckbox('urgeTriggers', '${trigger}')">
+                                    <span>${trigger}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                        <div class="expandable-text">
+                            <div class="expand-toggle" onclick="toggleExpand('triggerContext')">
+                                📝 Add context
+                            </div>
+                            <textarea id="triggerContext" class="hidden" placeholder="What's really going on?">${state.sessionData.triggerContext || ''}</textarea>
+                        </div>
+                    </div>
+
+                    <div style="padding: 16px; background: #f8fafc; border-radius: 8px; margin-bottom: 16px;">
+                        <strong>What will actually happen?</strong>
+                        <div style="margin-top: 12px;">
+                            <label style="display: block; font-size: 14px; color: #666; margin-bottom: 4px;">
+                                What will get better?
+                            </label>
+                            <textarea id="whatGetsBetter" placeholder="Momentary stress relief, distraction, brief pleasure...">${state.sessionData.whatGetsBetter || ''}</textarea>
+                        </div>
+                        <div style="margin-top: 12px;">
+                            <label style="display: block; font-size: 14px; color: #666; margin-bottom: 4px;">
+                                What will get worse?
+                            </label>
+                            <textarea id="whatGetsWorse" placeholder="Shame, self-attack afterward...">${state.sessionData.whatGetsWorse || ''}</textarea>
+                        </div>
+                        <div style="margin-top: 12px;">
+                            <label style="display: block; font-size: 14px; color: #666; margin-bottom: 4px;">
+                                What won't change?
+                            </label>
+                            <textarea id="whatStaysSame" placeholder="Still tired, still stressed, underlying problems still there...">${state.sessionData.whatStaysSame || ''}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Remember:</strong> Making a conscious choice - even if you choose to engage - is progress. 
+                        Pausing and investigating matters.
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="prevStep()" class="nav-button back-button">Back</button>
+                    <button onclick="captureUrgeTextsAndNext()" class="nav-button">Next</button>
+                </div>
+            `;
+        }
+
+        function renderNameFeelings() {
+            return `
+                <div class="question-section">
+                    <h3>Name the Feelings</h3>
+                    <label class="question-label">What are you feeling right now?</label>
+                    <div class="checkbox-group">
+                        ${['Shame', 'Irritability', 'Disappointment', 'Frustration', 'Self-attack'].map(feeling => `
+                            <label class="checkbox-item">
+                                <input type="checkbox" 
+                                       ${(state.sessionData.afterFeelings || []).includes(feeling) ? 'checked' : ''}
+                                       onchange="toggleCheckbox('afterFeelings', '${feeling}')">
+                                <span>${feeling}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <div class="expandable-text">
+                        <div class="expand-toggle" onclick="toggleExpand('afterFeelingsNote')">
+                            📝 Add more detail
+                        </div>
+                        <textarea id="afterFeelingsNote" class="hidden" placeholder="Other feelings...">${state.sessionData.afterFeelingsNote || ''}</textarea>
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="captureTextAndNext('afterFeelingsNote', 'afterFeelingsNote')" class="nav-button">Next</button>
+                </div>
+            `;
+        }
+
+        function renderOutsiderAfterHabit() {
+            return `
+                <div class="question-section">
+                    <h3>Outsider Perspective</h3>
+                    <div class="mantra-box">
+                        "A neutral observer would say: You engaged the habit under stress. This makes sense - it's how you've always responded to this scenario. Of course you would do it that way. But this doesn't erase weeks of work or make you a failure."
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <label class="question-label">What triggered this tonight?</label>
+                        <textarea id="habitTrigger" placeholder="What was happening before the urge?">${state.sessionData.habitTrigger || ''}</textarea>
+                    </div>
+
+                    <div class="info-box" style="margin-top: 16px;">
+                        <strong>Perfectionism Interrupt:</strong>
+                        <ul style="margin-top: 8px; margin-left: 20px;">
+                            <li>My worth isn't determined by perfect habit control</li>
+                            <li>I am still a good person</li>
+                            <li>This doesn't erase my progress</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="prevStep()" class="nav-button back-button">Back</button>
+                    <button onclick="captureTextAndNext('habitTrigger', 'habitTrigger')" class="nav-button">Next</button>
+                </div>
+            `;
+        }
+
+        function renderReassureAfterHabit() {
+            completeSession();
+            return `
+                <div class="question-section">
+                    <h3>What Actually Helps Now?</h3>
+                    <p style="color: #666; margin-bottom: 16px;">
+                        You've interrupted the shame spiral. That's huge.
+                    </p>
+
+                    <div class="mantra-box">
+                        "My worth is not determined by perfect habit control. I am still a good person."
+                    </div>
+
+                    <label class="question-label" style="margin-top: 20px;">What do you need right now?</label>
+                    <div class="checkbox-group">
+                        ${[
+                            'Sleep',
+                            'Water',
+                            'Self-compassion',
+                            'Talk to Claude tomorrow morning',
+                            'Just move forward'
+                        ].map(need => `
+                            <label class="checkbox-item">
+                                <input type="checkbox" 
+                                       ${(state.sessionData.needs || []).includes(need) ? 'checked' : ''}
+                                       onchange="toggleCheckbox('needs', '${need}')">
+                                <span>${need}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+
+                    <div class="info-box" style="margin-top: 20px;">
+                        This will be noted for your morning check-in tomorrow. You're not alone in this.
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="goHome()" class="nav-button">Back to Home</button>
+                </div>
+            `;
+        }
+
+        function renderReassure() {
+            completeSession();
+            const activationType = state.sessionData.activationType;
+            let mantra = "I am still a good person. I am good enough.";
+            
+            if (activationType === '🎯 Perfectionism') {
+                mantra = "My worth is not determined by avoiding all mistakes. I am good enough.";
+            } else if (activationType === '💔 Rejection') {
+                mantra = "My worth is not determined by others' approval. I am good enough.";
+            } else if (activationType === '🌀 Habit Urge') {
+                mantra = "My worth is not determined by perfect habit control. I am good enough.";
+            }
+
+            return `
+                <div class="question-section">
+                    <h3>R - REASSURE (1 minute)</h3>
+                    <p style="color: #666; margin-bottom: 16px;">
+                        Ground back in your worth after the cognitive work
+                    </p>
+
+                    <div class="mantra-box">
+                        ${mantra}
+                    </div>
+
+                    <div style="padding: 16px; background: #f8fafc; border-radius: 8px; margin: 20px 0;">
+                        <strong>Evidence reminder:</strong>
+                        <p style="font-size: 14px; color: #666; margin-top: 8px;">
+                            Think of one person who genuinely cares about you: Franni, your kids, a close friend
+                        </p>
+                    </div>
+
+                    <label class="question-label">Check-in:</label>
+                    <div style="margin: 12px 0;">
+                        <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
+                            <span style="flex: 1; font-size: 14px;">Are you still activated?</span>
+                            <div class="radio-group" style="flex: 1;">
+                                <div class="radio-button ${state.sessionData.stillActivated === 'yes' ? 'selected' : ''}" 
+                                     onclick="selectOption('stillActivated', 'yes')" style="flex: 1;">Yes</div>
+                                <div class="radio-button ${state.sessionData.stillActivated === 'no' ? 'selected' : ''}" 
+                                     onclick="selectOption('stillActivated', 'no')" style="flex: 1;">No</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <span style="flex: 1; font-size: 14px;">Is it tolerable now?</span>
+                            <div class="radio-group" style="flex: 1;">
+                                <div class="radio-button ${state.sessionData.tolerable === 'yes' ? 'selected' : ''}" 
+                                     onclick="selectOption('tolerable', 'yes')" style="flex: 1;">Yes</div>
+                                <div class="radio-button ${state.sessionData.tolerable === 'no' ? 'selected' : ''}" 
+                                     onclick="selectOption('tolerable', 'no')" style="flex: 1;">No</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        Remember: You won't be fully calm - you'll be CALMER. Still activated but at a manageable level.
+                    </div>
+
+                    ${state.sessionData.tolerable === 'no' ? `
+                        <div style="margin-top: 16px;">
+                            <button onclick="openClaudeWithContext()" class="secondary-button" style="width: 100%;">
+                                <span class="button-icon">💬</span>
+                                <span>Talk to Claude for more support</span>
+                            </button>
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="goHome()" class="nav-button">Complete & Go Home</button>
+                </div>
+            `;
+        }
+
+        function renderStats() {
+            const stats = calculateStats();
+            
+            return `
+                <div class="home-icon" onclick="goHome()">🏠</div>
+                <div class="card">
+                    <h2>Your Stats & Patterns</h2>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">${stats.totalCheckins}</div>
+                            <div class="stat-label">Total Check-ins</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${stats.morningCheckins}</div>
+                            <div class="stat-label">Morning</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${stats.eveningCheckins}</div>
+                            <div class="stat-label">Evening</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${stats.activations}</div>
+                            <div class="stat-label">Activations</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 24px;">
+                        <h3>System Breakdown</h3>
+                        <div style="margin-top: 12px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>🎯 Perfectionism:</span>
+                                <strong>${stats.perfectionism}</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>💔 Rejection/Approval:</span>
+                                <strong>${stats.rejection}</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>🌀 Habit Urge:</span>
+                                <strong>${stats.habitUrge}</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>😔 After Habit:</span>
+                                <strong>${stats.afterHabit}</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 24px;">
+                        <h3>Recent Activity</h3>
+                        <div style="max-height: 300px; overflow-y: auto; margin-top: 12px;">
+                            ${state.history.slice().reverse().slice(0, 10).map(session => `
+                                <div style="padding: 12px; background: #f8fafc; border-radius: 8px; margin-bottom: 8px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                                        <div>
+                                            <strong>${getSessionIcon(session.type)} ${session.type}</strong>
+                                            <div style="font-size: 12px; color: #666; margin-top: 4px;">
+                                                ${new Date(session.timestamp).toLocaleString()}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="button-group" style="margin-top: 24px;">
+                        <button onclick="exportData()" class="secondary-button">
+                            <span class="button-icon">📥</span>
+                            <span>Export Data for Claude Analysis</span>
+                        </button>
+                        
+                        <button onclick="clearAllData()" class="danger-button">
+                            <span class="button-icon">🗑️</span>
+                            <span>Clear All Data</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============= HELPER FUNCTIONS =============
+
+        function getTodayCheckins() {
+            const today = new Date().toDateString();
+            const todaySessions = state.history.filter(s => 
+                new Date(s.timestamp).toDateString() === today
+            );
+            
+            return {
+                morning: todaySessions.some(s => s.type === 'morning'),
+                evening: todaySessions.some(s => s.type === 'evening')
+            };
+        }
+
+        function getActivationCount() {
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            
+            return state.history.filter(s => 
+                s.type === 'activated' && new Date(s.timestamp) > weekAgo
+            ).length;
+        }
+
+        function getSessionIcon(type) {
+            const icons = {
+                'morning': '☀️',
+                'evening': '🌙',
+                'activated': '🚨'
+            };
+            return icons[type] || '📝';
+        }
+
+        function calculateStats() {
+            const stats = {
+                totalCheckins: state.history.length,
+                morningCheckins: 0,
+                eveningCheckins: 0,
+                activations: 0,
+                perfectionism: 0,
+                rejection: 0,
+                habitUrge: 0,
+                afterHabit: 0
+            };
+
+            state.history.forEach(session => {
+                if (session.type === 'morning') stats.morningCheckins++;
+                if (session.type === 'evening') stats.eveningCheckins++;
+                if (session.type === 'activated') {
+                    stats.activations++;
+                    const activationType = session.data.activationType;
+                    if (activationType === '🎯 Perfectionism') stats.perfectionism++;
+                    if (activationType === '💔 Rejection') stats.rejection++;
+                    if (activationType === '🌀 Habit Urge') stats.habitUrge++;
+                    if (activationType === '😔 Already Engaged') stats.afterHabit++;
+                }
+            });
+
+            return stats;
+        }
+
+        // ============= EVENT HANDLERS =============
+
+        function startCheckin(type) {
+            state.currentView = type;
+            state.currentStep = type === 'activated' ? 0 : 0;
+            state.sessionData = {};
+            render();
+        }
+
+        function selectActivationType(type) {
+            state.sessionData.activationType = type;
+            state.currentStep = 1;
+            autoSave();
+            render();
+        }
+
+        function nextStep() {
+            state.currentStep++;
+            autoSave();
+            render();
+        }
+
+        function prevStep() {
+            state.currentStep--;
+            render();
+        }
+
+        function selectOption(key, value) {
+            state.sessionData[key] = value;
+            autoSave();
+            render();
+        }
+
+        function toggleCheckbox(key, value) {
+            if (!state.sessionData[key]) {
+                state.sessionData[key] = [];
+            }
+            
+            const index = state.sessionData[key].indexOf(value);
+            if (index > -1) {
+                state.sessionData[key].splice(index, 1);
+            } else {
+                state.sessionData[key].push(value);
+            }
+            autoSave();
+        }
+
+        function toggleBodyPart(part) {
+            if (!state.sessionData.bodyParts) {
+                state.sessionData.bodyParts = [];
+            }
+            
+            const index = state.sessionData.bodyParts.indexOf(part);
+            if (index > -1) {
+                state.sessionData.bodyParts.splice(index, 1);
+            } else {
+                state.sessionData.bodyParts.push(part);
+            }
+            autoSave();
+            render();
+        }
+
+        function toggleExpand(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.classList.toggle('hidden');
+            }
+        }
+
+        function captureTextAndNext(elementId, dataKey) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                state.sessionData[dataKey] = element.value;
+            }
+            nextStep();
+        }
+
+        function captureUrgeTextsAndNext() {
+            ['triggerContext', 'whatGetsBetter', 'whatGetsWorse', 'whatStaysSame'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    state.sessionData[id] = element.value;
+                }
+            });
+            
+            // Capture perfectionism texts if they exist
+            ['whatHappened', 'whatItMeant', 'outsiderView', 'whatHappensImperfect'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    state.sessionData[id] = element.value;
+                }
+            });
+            
+            nextStep();
+        }
+
+        function resumeSession() {
+            if (state.inProgressSession) {
+                state.currentView = state.inProgressSession.type;
+                state.currentStep = state.inProgressSession.step;
+                state.sessionData = { ...state.inProgressSession.data };
+                render();
+            }
+        }
+
+        function clearInProgress() {
+            state.inProgressSession = null;
+            saveData();
+            render();
+        }
+
+        function goHome() {
+            state.currentView = 'home';
+            state.currentStep = 0;
+            state.sessionData = {};
+            render();
+        }
+
+        function viewStats() {
+            state.currentView = 'stats';
+            render();
+        }
+
+        function confirmExit() {
+            if (confirm('Are you sure you want to exit? Your progress will be saved.')) {
+                goHome();
+            }
+        }
+
+        function openClaudeProject() {
+            window.open('https://claude.ai/project/0f49efae-03be-46c1-badc-fa4f21d9aeb9', '_blank');
+        }
+
+        function openClaudeWithContext() {
+            const context = generateContextMessage();
+            const encodedMessage = encodeURIComponent(context);
+            window.open(`https://claude.ai/project/0f49efae-03be-46c1-badc-fa4f21d9aeb9?message=${encodedMessage}`, '_blank');
+        }
+
+        function generateContextMessage() {
+            const type = state.sessionData.activationType || state.currentView;
+            let message = `I'm checking in from my CALMR app.\n\n`;
+            
+            if (state.sessionData.activationType) {
+                message += `**Activation Type:** ${state.sessionData.activationType}\n\n`;
+            }
+            
+            if (state.sessionData.bodyParts && state.sessionData.bodyParts.length > 0) {
+                message += `**Physical sensations:** ${state.sessionData.bodyParts.join(', ')}\n`;
+            }
+            
+            if (state.sessionData.sensations && state.sessionData.sensations.length > 0) {
+                message += `**Feeling:** ${state.sessionData.sensations.join(', ')}\n`;
+            }
+            
+            if (state.sessionData.feelings && state.sessionData.feelings.length > 0) {
+                message += `**Emotions:** ${state.sessionData.feelings.join(', ')}\n`;
+            }
+            
+            if (state.sessionData.peteThoughts && state.sessionData.peteThoughts.length > 0) {
+                message += `**Perfect Pete is saying:** ${state.sessionData.peteThoughts.join(', ')}\n`;
+            }
+            
+            if (state.sessionData.urgeTriggers && state.sessionData.urgeTriggers.length > 0) {
+                message += `**Urge triggered by:** ${state.sessionData.urgeTriggers.join(', ')}\n`;
+            }
+            
+            message += `\nHelp me work through this.`;
+            
+            return message;
+        }
+
+        function exportData() {
+            const exportData = {
+                exportDate: new Date().toISOString(),
+                summary: calculateStats(),
+                sessions: state.history
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `calmr-data-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear ALL data? This cannot be undone.')) {
+                if (confirm('Really sure? All your check-ins and progress will be deleted.')) {
+                    localStorage.removeItem('calmrData');
+                    state.history = [];
+                    state.inProgressSession = null;
+                    alert('All data cleared.');
+                    goHome();
+                }
+            }
+        }
+
+        // ============= SETTINGS & NOTIFICATIONS =============
+        
+        function renderSettingsModal() {
+            return `
+                <div id="settingsModal" class="modal">
+                    <div class="modal-content">
+                        <h2>⚙️ Settings</h2>
+                        
+                        <div style="margin: 24px 0;">
+                            <h3 style="margin-bottom: 16px;">Notification Reminders</h3>
+                            
+                            ${!state.settings.notificationsEnabled ? `
+                                <div class="info-box" style="margin-bottom: 16px;">
+                                    <strong>How to enable notifications:</strong>
+                                    <ol style="margin: 8px 0 0 20px; font-size: 14px;">
+                                        <li>Tap the "Enable Notifications" button below</li>
+                                        <li>When prompted, allow notifications</li>
+                                        <li>Add this app to your home screen for best experience</li>
+                                    </ol>
+                                </div>
+                                <button onclick="requestNotificationPermission()" style="width: 100%; background: #10b981; margin-bottom: 16px;">
+                                    <span class="button-icon">🔔</span>
+                                    <span>Enable Notifications</span>
+                                </button>
+                            ` : `
+                                <div style="padding: 12px; background: #d1fae5; border-radius: 8px; margin-bottom: 16px; color: #065f46;">
+                                    ✓ Notifications enabled
+                                </div>
+                            `}
+                            
+                            <div class="switch-container">
+                                <div>
+                                    <strong>Morning Reminder</strong>
+                                    <div style="font-size: 14px; color: #666;">Daily check-in prompt</div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="morningToggle" 
+                                           ${state.settings.morningReminderEnabled ? 'checked' : ''}
+                                           onchange="toggleMorningReminder()"
+                                           ${!state.settings.notificationsEnabled ? 'disabled' : ''}>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            
+                            ${state.settings.morningReminderEnabled ? `
+                                <div style="margin: 12px 0 0 0; padding-left: 0;">
+                                    <label style="display: block; font-size: 14px; color: #666; margin-bottom: 8px;">
+                                        Reminder time:
+                                    </label>
+                                    <input type="time" class="time-input" 
+                                           value="${state.settings.morningReminderTime}"
+                                           onchange="updateMorningTime(this.value)">
+                                </div>
+                            ` : ''}
+                            
+                            <div class="switch-container" style="margin-top: 16px;">
+                                <div>
+                                    <strong>Evening Reminder</strong>
+                                    <div style="font-size: 14px; color: #666;">Daily reflection prompt</div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="eveningToggle"
+                                           ${state.settings.eveningReminderEnabled ? 'checked' : ''}
+                                           onchange="toggleEveningReminder()"
+                                           ${!state.settings.notificationsEnabled ? 'disabled' : ''}>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            
+                            ${state.settings.eveningReminderEnabled ? `
+                                <div style="margin: 12px 0 0 0; padding-left: 0;">
+                                    <label style="display: block; font-size: 14px; color: #666; margin-bottom: 8px;">
+                                        Reminder time:
+                                    </label>
+                                    <input type="time" class="time-input"
+                                           value="${state.settings.eveningReminderTime}"
+                                           onchange="updateEveningTime(this.value)">
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <div style="margin-top: 24px;">
+                            <h3 style="margin-bottom: 12px;">About</h3>
+                            <p style="font-size: 14px; color: #666;">
+                                CALMR Check-In App v1.0<br>
+                                Built for Josh's personal development journey
+                            </p>
+                        </div>
+                        
+                        <div class="navigation-buttons" style="margin-top: 24px;">
+                            <button onclick="closeSettings()" class="nav-button">Close</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function openSettings() {
+            document.getElementById('settingsModal').classList.add('show');
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsModal').classList.remove('show');
+            render(); // Re-render to update toggle states
+        }
+
+        async function requestNotificationPermission() {
+            if (!('Notification' in window)) {
+                alert('This browser does not support notifications');
+                return;
+            }
+
+            try {
+                const permission = await Notification.requestPermission();
+                
+                if (permission === 'granted') {
+                    state.settings.notificationsEnabled = true;
+                    saveData();
+                    
+                    // Show test notification
+                    new Notification('CALMR Notifications Enabled! 🎉', {
+                        body: 'You\'ll now receive daily reminders for your check-ins.',
+                        icon: '🧘',
+                        badge: '🧘'
+                    });
+                    
+                    // Schedule notifications
+                    scheduleNotifications();
+                    
+                    render();
+                } else {
+                    alert('Notifications were denied. Please enable them in your browser settings.');
+                }
+            } catch (error) {
+                console.error('Error requesting notification permission:', error);
+                alert('Could not enable notifications. Please try again.');
+            }
+        }
+
+        function toggleMorningReminder() {
+            state.settings.morningReminderEnabled = !state.settings.morningReminderEnabled;
+            saveData();
+            scheduleNotifications();
+            render();
+        }
+
+        function toggleEveningReminder() {
+            state.settings.eveningReminderEnabled = !state.settings.eveningReminderEnabled;
+            saveData();
+            scheduleNotifications();
+            render();
+        }
+
+        function updateMorningTime(time) {
+            state.settings.morningReminderTime = time;
+            saveData();
+            scheduleNotifications();
+        }
+
+        function updateEveningTime(time) {
+            state.settings.eveningReminderTime = time;
+            saveData();
+            scheduleNotifications();
+        }
+
+        function scheduleNotifications() {
+            if (!state.settings.notificationsEnabled) return;
+            
+            // Clear existing scheduled notifications
+            if (window.scheduledNotifications) {
+                window.scheduledNotifications.forEach(id => clearTimeout(id));
+            }
+            window.scheduledNotifications = [];
+
+            // Schedule morning notification
+            if (state.settings.morningReminderEnabled) {
+                scheduleNotification(
+                    state.settings.morningReminderTime,
+                    'Time for your morning check-in! ☀️',
+                    'Start your day with intention and awareness.'
+                );
+            }
+
+            // Schedule evening notification
+            if (state.settings.eveningReminderEnabled) {
+                scheduleNotification(
+                    state.settings.eveningReminderTime,
+                    'Time for your evening check-in! 🌙',
+                    'Reflect on your day and acknowledge your progress.'
+                );
+            }
+        }
+
+        function scheduleNotification(timeString, title, body) {
+            const [hours, minutes] = timeString.split(':').map(Number);
+            const now = new Date();
+            const scheduledTime = new Date();
+            scheduledTime.setHours(hours, minutes, 0, 0);
+
+            // If time has passed today, schedule for tomorrow
+            if (scheduledTime <= now) {
+                scheduledTime.setDate(scheduledTime.getDate() + 1);
+            }
+
+            const delay = scheduledTime.getTime() - now.getTime();
+
+            const timeoutId = setTimeout(() => {
+                if (Notification.permission === 'granted') {
+                    new Notification(title, {
+                        body: body,
+                        icon: '🧘',
+                        badge: '🧘',
+                        requireInteraction: false
+                    });
+                }
+                
+                // Reschedule for next day
+                scheduleNotifications();
+            }, delay);
+
+            window.scheduledNotifications = window.scheduledNotifications || [];
+            window.scheduledNotifications.push(timeoutId);
+        }
+
+        // Check and schedule notifications on load
+        function initializeNotifications() {
+            if (state.settings.notificationsEnabled && Notification.permission === 'granted') {
+                scheduleNotifications();
+            }
+        }
+
+        function attachEventListeners() {
+            // Event listeners are attached via onclick in the HTML
+            // This function is here for any dynamic listeners we might need
+        }
+
+        // ============= INITIALIZATION =============
+        loadData();
+        initializeNotifications();
+        render();
+
+        // ============= PWA MANIFEST =============
+        const manifest = {
+            "name": "CALMR Check-In",
+            "short_name": "CALMR",
+            "description": "Your daily self-worth accountability system",
+            "start_url": ".",
+            "display": "standalone",
+            "background_color": "#667eea",
+            "theme_color": "#667eea",
+            "orientation": "portrait-primary",
+            "icons": [
+                {
+                    "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🧘</text></svg>",
+                    "sizes": "512x512",
+                    "type": "image/svg+xml",
+                    "purpose": "any maskable"
+                }
+            ]
+        };
+
+        const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+        const manifestURL = URL.createObjectURL(manifestBlob);
+        document.getElementById('manifest-placeholder').setAttribute('href', manifestURL);
+    </script>
+</body>
+</html>
