@@ -1783,7 +1783,6 @@
         }
 
         function renderReassureAfterHabit() {
-            completeSession();
             return `
                 <div class="question-section">
                     <h3>What Actually Helps Now?</h3>
@@ -1818,13 +1817,12 @@
                     </div>
                 </div>
                 <div class="navigation-buttons">
-                    <button onclick="goHome()" class="nav-button">Back to Home</button>
+                    <button onclick="completeAndGoHome()" class="nav-button">Complete & Go Home</button>
                 </div>
             `;
         }
 
         function renderReassure() {
-            completeSession();
             const activationType = state.sessionData.activationType;
             let mantra = "I am still a good person. I am good enough.";
             
@@ -1854,24 +1852,24 @@
                         </p>
                     </div>
 
-                    <label class="question-label">Check-in:</label>
+                    <label class="question-label">Reflection check-in:</label>
                     <div style="margin: 12px 0;">
                         <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
                             <span style="flex: 1; font-size: 14px;">Are you still activated?</span>
                             <div class="radio-group" style="flex: 1;">
                                 <div class="radio-button ${state.sessionData.stillActivated === 'yes' ? 'selected' : ''}" 
-                                     onclick="selectOption('stillActivated', 'yes')" style="flex: 1;">Yes</div>
+                                     onclick="selectOptionNoNav('stillActivated', 'yes')" style="flex: 1;">Yes</div>
                                 <div class="radio-button ${state.sessionData.stillActivated === 'no' ? 'selected' : ''}" 
-                                     onclick="selectOption('stillActivated', 'no')" style="flex: 1;">No</div>
+                                     onclick="selectOptionNoNav('stillActivated', 'no')" style="flex: 1;">No</div>
                             </div>
                         </div>
                         <div style="display: flex; gap: 12px; align-items: center;">
                             <span style="flex: 1; font-size: 14px;">Is it tolerable now?</span>
                             <div class="radio-group" style="flex: 1;">
                                 <div class="radio-button ${state.sessionData.tolerable === 'yes' ? 'selected' : ''}" 
-                                     onclick="selectOption('tolerable', 'yes')" style="flex: 1;">Yes</div>
+                                     onclick="selectOptionNoNav('tolerable', 'yes')" style="flex: 1;">Yes</div>
                                 <div class="radio-button ${state.sessionData.tolerable === 'no' ? 'selected' : ''}" 
-                                     onclick="selectOption('tolerable', 'no')" style="flex: 1;">No</div>
+                                     onclick="selectOptionNoNav('tolerable', 'no')" style="flex: 1;">No</div>
                             </div>
                         </div>
                     </div>
@@ -1880,17 +1878,26 @@
                         Remember: You won't be fully calm - you'll be CALMER. Still activated but at a manageable level.
                     </div>
 
-                    ${state.sessionData.tolerable === 'no' ? `
-                        <div style="margin-top: 16px;">
-                            <button onclick="openClaudeWithContext()" class="secondary-button" style="width: 100%;">
-                                <span class="button-icon">💬</span>
-                                <span>Talk to Claude for more support</span>
-                            </button>
-                        </div>
-                    ` : ''}
+                    <div id="supportSection">
+                        ${state.sessionData.tolerable === 'no' ? `
+                            <div style="margin-top: 16px;">
+                                <p style="font-size: 14px; color: #666; margin-bottom: 8px;">
+                                    Still struggling? That's okay. You've done the work - sometimes it just takes time.
+                                </p>
+                                <button onclick="openClaudeWithContext()" class="secondary-button" style="width: 100%;">
+                                    <span class="button-icon">💬</span>
+                                    <span>Talk to Claude for more support</span>
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <p style="font-size: 14px; color: #666; text-align: center; margin-top: 16px;">
+                        You showed up for yourself. That's what matters.
+                    </p>
                 </div>
                 <div class="navigation-buttons">
-                    <button onclick="goHome()" class="nav-button">Complete & Go Home</button>
+                    <button onclick="completeAndGoHome()" class="nav-button">Complete & Go Home</button>
                 </div>
             `;
         }
@@ -2070,6 +2077,45 @@
             render();
         }
 
+        function selectOptionNoNav(key, value) {
+            state.sessionData[key] = value;
+            autoSave();
+            // Update just the support section if it exists
+            const supportSection = document.getElementById('supportSection');
+            if (supportSection && key === 'tolerable') {
+                if (value === 'no') {
+                    supportSection.innerHTML = `
+                        <div style="margin-top: 16px;">
+                            <p style="font-size: 14px; color: #666; margin-bottom: 8px;">
+                                Still struggling? That's okay. You've done the work - sometimes it just takes time.
+                            </p>
+                            <button onclick="openClaudeWithContext()" class="secondary-button" style="width: 100%;">
+                                <span class="button-icon">💬</span>
+                                <span>Talk to Claude for more support</span>
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    supportSection.innerHTML = '';
+                }
+            }
+            // Update button styling without re-rendering
+            document.querySelectorAll('.radio-button').forEach(btn => {
+                if (btn.getAttribute('onclick')?.includes(`'${key}'`)) {
+                    if (btn.getAttribute('onclick')?.includes(`'${value}'`)) {
+                        btn.classList.add('selected');
+                    } else {
+                        btn.classList.remove('selected');
+                    }
+                }
+            });
+        }
+
+        function completeAndGoHome() {
+            completeSession();
+            goHome();
+        }
+
         function toggleCheckbox(key, value) {
             if (!state.sessionData[key]) {
                 state.sessionData[key] = [];
@@ -2167,13 +2213,12 @@
         }
 
         function openClaudeProject() {
-            window.open('https://claude.ai/project/0f49efae-03be-46c1-badc-fa4f21d9aeb9', '_blank');
+            window.location.href = 'claude://';
         }
 
         function openClaudeWithContext() {
-            const context = generateContextMessage();
-            const encodedMessage = encodeURIComponent(context);
-            window.open(`https://claude.ai/project/0f49efae-03be-46c1-badc-fa4f21d9aeb9?message=${encodedMessage}`, '_blank');
+            // Open Claude app - user will navigate to project manually
+            window.location.href = 'claude://';
         }
 
         function generateContextMessage() {
