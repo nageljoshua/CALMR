@@ -365,25 +365,6 @@
             transform: scale(1.1);
         }
 
-        .settings-icon {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .settings-icon:hover {
-            transform: scale(1.1);
-        }
-
         .modal {
             display: none;
             position: fixed;
@@ -512,14 +493,7 @@
             currentStep: 0,
             sessionData: {},
             history: [],
-            inProgressSession: null,
-            settings: {
-                notificationsEnabled: false,
-                morningReminderEnabled: false,
-                morningReminderTime: '08:00',
-                eveningReminderEnabled: false,
-                eveningReminderTime: '20:00'
-            }
+            inProgressSession: null
         };
 
         // Load saved data from localStorage
@@ -529,7 +503,6 @@
                 const data = JSON.parse(saved);
                 state.history = data.history || [];
                 state.inProgressSession = data.inProgressSession || null;
-                state.settings = data.settings || state.settings;
             }
         }
 
@@ -537,8 +510,7 @@
         function saveData() {
             localStorage.setItem('calmrData', JSON.stringify({
                 history: state.history,
-                inProgressSession: state.inProgressSession,
-                settings: state.settings
+                inProgressSession: state.inProgressSession
             }));
         }
 
@@ -598,19 +570,9 @@
             const todayCheckins = getTodayCheckins();
             
             return `
-                <div class="settings-icon" onclick="openSettings()">⚙️</div>
                 <div class="card">
                     <h1>CALMR Check-In</h1>
                     <p class="subtitle">Your daily self-worth accountability system</p>
-                    
-                    ${!state.settings.notificationsEnabled ? `
-                        <div class="info-box" style="margin-bottom: 16px;">
-                            <strong>💡 Tip:</strong> Enable notifications to get daily reminders!
-                            <button onclick="openSettings()" style="background: #3b82f6; padding: 8px 16px; font-size: 14px; margin-top: 8px;">
-                                Set up reminders
-                            </button>
-                        </div>
-                    ` : ''}
                     
                     ${hasInProgress ? `
                         <div class="info-box">
@@ -672,7 +634,6 @@
                         </button>
                     </div>
                 </div>
-                ${renderSettingsModal()}
             `;
         }
 
@@ -1954,18 +1915,22 @@
                     <div style="margin-top: 24px;">
                         <h3>Recent Activity</h3>
                         <div style="max-height: 300px; overflow-y: auto; margin-top: 12px;">
-                            ${state.history.slice().reverse().slice(0, 10).map(session => `
-                                <div style="padding: 12px; background: #f8fafc; border-radius: 8px; margin-bottom: 8px;">
-                                    <div style="display: flex; justify-content: space-between; align-items: start;">
-                                        <div>
-                                            <strong>${getSessionIcon(session.type)} ${session.type}</strong>
-                                            <div style="font-size: 12px; color: #666; margin-top: 4px;">
-                                                ${new Date(session.timestamp).toLocaleString()}
-                                            </div>
+                            ${state.history.slice().reverse().slice(0, 10).map((session, index) => {
+                                const actualIndex = state.history.length - 1 - index;
+                                return `
+                                <div style="padding: 12px; background: #f8fafc; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: start;">
+                                    <div style="flex: 1;">
+                                        <strong>${getSessionIcon(session.type)} ${session.type}</strong>
+                                        <div style="font-size: 12px; color: #666; margin-top: 4px;">
+                                            ${new Date(session.timestamp).toLocaleString()}
                                         </div>
                                     </div>
+                                    <button onclick="deleteHistoryItem(${actualIndex})" 
+                                            style="background: #ef4444; padding: 6px 12px; font-size: 12px; border: none; border-radius: 6px; color: white; cursor: pointer;">
+                                        🗑️
+                                    </button>
                                 </div>
-                            `).join('')}
+                            `}).join('')}
                         </div>
                     </div>
 
@@ -2283,234 +2248,11 @@
             }
         }
 
-        // ============= SETTINGS & NOTIFICATIONS =============
-        
-        function renderSettingsModal() {
-            return `
-                <div id="settingsModal" class="modal">
-                    <div class="modal-content">
-                        <h2>⚙️ Settings</h2>
-                        
-                        <div style="margin: 24px 0;">
-                            <h3 style="margin-bottom: 16px;">Notification Reminders</h3>
-                            
-                            ${!state.settings.notificationsEnabled ? `
-                                <div class="info-box" style="margin-bottom: 16px;">
-                                    <strong>How to enable notifications:</strong>
-                                    <ol style="margin: 8px 0 0 20px; font-size: 14px;">
-                                        <li>Tap the "Enable Notifications" button below</li>
-                                        <li>When prompted, allow notifications</li>
-                                        <li>Add this app to your home screen for best experience</li>
-                                    </ol>
-                                </div>
-                                <button onclick="requestNotificationPermission()" style="width: 100%; background: #10b981; margin-bottom: 16px;">
-                                    <span class="button-icon">🔔</span>
-                                    <span>Enable Notifications</span>
-                                </button>
-                            ` : `
-                                <div style="padding: 12px; background: #d1fae5; border-radius: 8px; margin-bottom: 16px; color: #065f46;">
-                                    ✓ Notifications enabled
-                                </div>
-                            `}
-                            
-                            <div class="switch-container">
-                                <div>
-                                    <strong>Morning Reminder</strong>
-                                    <div style="font-size: 14px; color: #666;">Daily check-in prompt</div>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" id="morningToggle" 
-                                           ${state.settings.morningReminderEnabled ? 'checked' : ''}
-                                           onchange="toggleMorningReminder()"
-                                           ${!state.settings.notificationsEnabled ? 'disabled' : ''}>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            
-                            ${state.settings.morningReminderEnabled ? `
-                                <div style="margin: 12px 0 0 0; padding-left: 0;">
-                                    <label style="display: block; font-size: 14px; color: #666; margin-bottom: 8px;">
-                                        Reminder time:
-                                    </label>
-                                    <input type="time" class="time-input" 
-                                           value="${state.settings.morningReminderTime}"
-                                           onchange="updateMorningTime(this.value)">
-                                </div>
-                            ` : ''}
-                            
-                            <div class="switch-container" style="margin-top: 16px;">
-                                <div>
-                                    <strong>Evening Reminder</strong>
-                                    <div style="font-size: 14px; color: #666;">Daily reflection prompt</div>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" id="eveningToggle"
-                                           ${state.settings.eveningReminderEnabled ? 'checked' : ''}
-                                           onchange="toggleEveningReminder()"
-                                           ${!state.settings.notificationsEnabled ? 'disabled' : ''}>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            
-                            ${state.settings.eveningReminderEnabled ? `
-                                <div style="margin: 12px 0 0 0; padding-left: 0;">
-                                    <label style="display: block; font-size: 14px; color: #666; margin-bottom: 8px;">
-                                        Reminder time:
-                                    </label>
-                                    <input type="time" class="time-input"
-                                           value="${state.settings.eveningReminderTime}"
-                                           onchange="updateEveningTime(this.value)">
-                                </div>
-                            ` : ''}
-                        </div>
-
-                        <div style="margin-top: 24px;">
-                            <h3 style="margin-bottom: 12px;">About</h3>
-                            <p style="font-size: 14px; color: #666;">
-                                CALMR Check-In App v1.0<br>
-                                Built for Josh's personal development journey
-                            </p>
-                        </div>
-                        
-                        <div class="navigation-buttons" style="margin-top: 24px;">
-                            <button onclick="closeSettings()" class="nav-button">Close</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function openSettings() {
-            document.getElementById('settingsModal').classList.add('show');
-        }
-
-        function closeSettings() {
-            document.getElementById('settingsModal').classList.remove('show');
-            render(); // Re-render to update toggle states
-        }
-
-        async function requestNotificationPermission() {
-            if (!('Notification' in window)) {
-                alert('This browser does not support notifications');
-                return;
-            }
-
-            try {
-                const permission = await Notification.requestPermission();
-                
-                if (permission === 'granted') {
-                    state.settings.notificationsEnabled = true;
-                    saveData();
-                    
-                    // Show test notification
-                    new Notification('CALMR Notifications Enabled! 🎉', {
-                        body: 'You\'ll now receive daily reminders for your check-ins.',
-                        icon: '🧘',
-                        badge: '🧘'
-                    });
-                    
-                    // Schedule notifications
-                    scheduleNotifications();
-                    
-                    render();
-                } else {
-                    alert('Notifications were denied. Please enable them in your browser settings.');
-                }
-            } catch (error) {
-                console.error('Error requesting notification permission:', error);
-                alert('Could not enable notifications. Please try again.');
-            }
-        }
-
-        function toggleMorningReminder() {
-            state.settings.morningReminderEnabled = !state.settings.morningReminderEnabled;
-            saveData();
-            scheduleNotifications();
-            render();
-        }
-
-        function toggleEveningReminder() {
-            state.settings.eveningReminderEnabled = !state.settings.eveningReminderEnabled;
-            saveData();
-            scheduleNotifications();
-            render();
-        }
-
-        function updateMorningTime(time) {
-            state.settings.morningReminderTime = time;
-            saveData();
-            scheduleNotifications();
-        }
-
-        function updateEveningTime(time) {
-            state.settings.eveningReminderTime = time;
-            saveData();
-            scheduleNotifications();
-        }
-
-        function scheduleNotifications() {
-            if (!state.settings.notificationsEnabled) return;
-            
-            // Clear existing scheduled notifications
-            if (window.scheduledNotifications) {
-                window.scheduledNotifications.forEach(id => clearTimeout(id));
-            }
-            window.scheduledNotifications = [];
-
-            // Schedule morning notification
-            if (state.settings.morningReminderEnabled) {
-                scheduleNotification(
-                    state.settings.morningReminderTime,
-                    'Time for your morning check-in! ☀️',
-                    'Start your day with intention and awareness.'
-                );
-            }
-
-            // Schedule evening notification
-            if (state.settings.eveningReminderEnabled) {
-                scheduleNotification(
-                    state.settings.eveningReminderTime,
-                    'Time for your evening check-in! 🌙',
-                    'Reflect on your day and acknowledge your progress.'
-                );
-            }
-        }
-
-        function scheduleNotification(timeString, title, body) {
-            const [hours, minutes] = timeString.split(':').map(Number);
-            const now = new Date();
-            const scheduledTime = new Date();
-            scheduledTime.setHours(hours, minutes, 0, 0);
-
-            // If time has passed today, schedule for tomorrow
-            if (scheduledTime <= now) {
-                scheduledTime.setDate(scheduledTime.getDate() + 1);
-            }
-
-            const delay = scheduledTime.getTime() - now.getTime();
-
-            const timeoutId = setTimeout(() => {
-                if (Notification.permission === 'granted') {
-                    new Notification(title, {
-                        body: body,
-                        icon: '🧘',
-                        badge: '🧘',
-                        requireInteraction: false
-                    });
-                }
-                
-                // Reschedule for next day
-                scheduleNotifications();
-            }, delay);
-
-            window.scheduledNotifications = window.scheduledNotifications || [];
-            window.scheduledNotifications.push(timeoutId);
-        }
-
-        // Check and schedule notifications on load
-        function initializeNotifications() {
-            if (state.settings.notificationsEnabled && Notification.permission === 'granted') {
-                scheduleNotifications();
+        function deleteHistoryItem(index) {
+            if (confirm('Delete this check-in from your history?')) {
+                state.history.splice(index, 1);
+                saveData();
+                render();
             }
         }
 
@@ -2521,7 +2263,6 @@
 
         // ============= INITIALIZATION =============
         loadData();
-        initializeNotifications();
         render();
 
         // ============= PWA MANIFEST =============
