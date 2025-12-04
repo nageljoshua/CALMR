@@ -667,9 +667,16 @@
         }
 
         function renderSleepQuality() {
+            const responses = {
+                'Poor': "That's rough, especially with two little ones. Sleep deprivation is no joke.",
+                'Fair': "Not great, not terrible. You're managing with what you've got.",
+                'Good': "Nice! Good sleep makes everything more manageable.",
+                'Great': "Hell yes! That's a solid foundation for the day."
+            };
+            
             return `
                 <div class="question-section">
-                    <label class="question-label">How did you sleep?</label>
+                    <label class="question-label">Hey Josh! How'd you sleep last night?</label>
                     <div class="radio-group">
                         ${['Poor', 'Fair', 'Good', 'Great'].map(option => `
                             <div class="radio-button ${state.sessionData.sleep === option ? 'selected' : ''}" 
@@ -678,6 +685,11 @@
                             </div>
                         `).join('')}
                     </div>
+                    ${state.sessionData.sleep ? `
+                        <p style="margin-top: 12px; padding: 12px; background: #e0e7ff; border-radius: 8px; color: #4338ca; font-size: 14px;">
+                            ${responses[state.sessionData.sleep]}
+                        </p>
+                    ` : ''}
                 </div>
                 <div class="navigation-buttons">
                     <button onclick="nextStep()" class="nav-button">Next</button>
@@ -686,9 +698,16 @@
         }
 
         function renderMoodEnergy() {
+            const responses = {
+                '😔 Low': "I hear you. Starting the day already depleted is hard.",
+                '😐 Okay': "Fair enough. You're showing up even when it's just okay.",
+                '🙂 Good': "Solid! That's a decent place to start from.",
+                '😊 Great': "Love it! Ride that energy today."
+            };
+            
             return `
                 <div class="question-section">
-                    <label class="question-label">Current mood/energy?</label>
+                    <label class="question-label">How's your mood and energy right now?</label>
                     <div class="radio-group">
                         ${['😔 Low', '😐 Okay', '🙂 Good', '😊 Great'].map(option => `
                             <div class="radio-button ${state.sessionData.mood === option ? 'selected' : ''}" 
@@ -697,6 +716,11 @@
                             </div>
                         `).join('')}
                     </div>
+                    ${state.sessionData.mood ? `
+                        <p style="margin-top: 12px; padding: 12px; background: #e0e7ff; border-radius: 8px; color: #4338ca; font-size: 14px;">
+                            ${responses[state.sessionData.mood]}
+                        </p>
+                    ` : ''}
                 </div>
                 <div class="navigation-buttons">
                     <button onclick="prevStep()" class="nav-button back-button">Back</button>
@@ -709,7 +733,10 @@
             const showText = state.sessionData.carryover === 'yes';
             return `
                 <div class="question-section">
-                    <label class="question-label">Still feeling activated from yesterday?</label>
+                    <label class="question-label">Are you still feeling activated from something yesterday?</label>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+                        Sometimes stuff lingers into the next day.
+                    </p>
                     <div class="radio-group">
                         <div class="radio-button ${state.sessionData.carryover === 'yes' ? 'selected' : ''}" 
                              onclick="selectOption('carryover', 'yes')">
@@ -722,8 +749,15 @@
                     </div>
                     ${showText ? `
                         <div style="margin-top: 16px;">
-                            <textarea id="carryoverNote" placeholder="What are you still feeling?">${state.sessionData.carryoverNote || ''}</textarea>
+                            <p style="font-size: 14px; color: #4338ca; margin-bottom: 8px;">
+                                Got it. What's still with you?
+                            </p>
+                            <textarea id="carryoverNote" placeholder="Brief note about what you're still feeling...">${state.sessionData.carryoverNote || ''}</textarea>
                         </div>
+                    ` : state.sessionData.carryover === 'no' ? `
+                        <p style="margin-top: 12px; padding: 12px; background: #e0e7ff; border-radius: 8px; color: #4338ca; font-size: 14px;">
+                            Clean slate today. Nice.
+                        </p>
                     ` : ''}
                 </div>
                 <div class="navigation-buttons">
@@ -736,7 +770,10 @@
         function renderLikelyTriggers() {
             return `
                 <div class="question-section">
-                    <label class="question-label">Any likely triggers today?</label>
+                    <label class="question-label">What might activate you today?</label>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+                        Let's prep for what's coming.
+                    </p>
                     <div class="checkbox-group">
                         ${[
                             'Stressful meetings/events',
@@ -757,7 +794,7 @@
                         <div class="expand-toggle" onclick="toggleExpand('triggerNote')">
                             📝 Add more context
                         </div>
-                        <textarea id="triggerNote" class="hidden" placeholder="Describe the triggers...">${state.sessionData.triggerNote || ''}</textarea>
+                        <textarea id="triggerNote" class="hidden" placeholder="Anything specific you want to note...">${state.sessionData.triggerNote || ''}</textarea>
                     </div>
                 </div>
                 <div class="navigation-buttons">
@@ -847,9 +884,9 @@
         function renderLookingForward() {
             return `
                 <div class="question-section">
-                    <label class="question-label">What's one thing to look forward to today?</label>
+                    <label class="question-label">What's one thing you're looking forward to today?</label>
                     <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
-                        Start your day with something positive to anticipate
+                        Even small things count. What's got a spark of good in it?
                     </p>
                     <div class="radio-group">
                         ${[
@@ -872,6 +909,10 @@
                         <div style="margin-top: 16px;">
                             <textarea id="lookingForwardDetail" placeholder="What are you looking forward to?">${state.sessionData.lookingForwardDetail || ''}</textarea>
                         </div>
+                    ` : state.sessionData.lookingForward && state.sessionData.lookingForward !== 'Other' ? `
+                        <p style="margin-top: 12px; padding: 12px; background: #e0e7ff; border-radius: 8px; color: #4338ca; font-size: 14px;">
+                            Nice. Hold onto that today.
+                        </p>
                     ` : ''}
                 </div>
                 <div class="navigation-buttons">
@@ -919,17 +960,31 @@
 
         function renderMorningSummary() {
             completeSession();
+            
+            // Build personalized message based on what they shared
+            let message = "You just showed up for yourself. ";
+            
+            if (state.sessionData.triggers && state.sessionData.triggers.length > 0) {
+                message += "You've prepped for what might come today. ";
+            }
+            
+            if (state.sessionData.lookingForward) {
+                message += "You've got something to look forward to. ";
+            }
+            
+            message += "Your CALMR tools are ready when you need them.";
+            
             return `
                 <div class="question-section">
-                    <h2>✅ Morning Check-in Complete!</h2>
-                    <p style="color: #666; margin: 16px 0;">
-                        Great job starting your day with intention. Remember:
+                    <h2>✅ Nice work, Josh</h2>
+                    <p style="color: #666; margin: 16px 0; font-size: 16px;">
+                        ${message}
                     </p>
                     <div class="mantra-box">
-                        "I am okay. I am good enough. My worth is not determined by perfect performance."
+                        "I am okay. I am good enough. I am trying my best. I am human."
                     </div>
-                    <p style="font-size: 14px; color: #666;">
-                        Your CALMR tools are ready when you need them today.
+                    <p style="font-size: 14px; color: #666; margin-top: 16px;">
+                        Go do your thing today.
                     </p>
                 </div>
                 <div class="navigation-buttons">
@@ -967,6 +1022,13 @@
         }
 
         function renderDayRating() {
+            const responses = {
+                '😔 Rough': "Yeah, some days are just hard. You made it through.",
+                '😐 Okay': "Fair enough. Not every day has to be great.",
+                '🙂 Good': "Solid! You handled what came at you.",
+                '😊 Great': "Hell yes! Take the win."
+            };
+            
             return `
                 <div class="question-section">
                     <label class="question-label">How was your day overall?</label>
@@ -978,6 +1040,11 @@
                             </div>
                         `).join('')}
                     </div>
+                    ${state.sessionData.dayRating ? `
+                        <p style="margin-top: 12px; padding: 12px; background: #e0e7ff; border-radius: 8px; color: #4338ca; font-size: 14px;">
+                            ${responses[state.sessionData.dayRating]}
+                        </p>
+                    ` : ''}
                 </div>
                 <div class="navigation-buttons">
                     <button onclick="nextStep()" class="nav-button">Next</button>
@@ -988,7 +1055,7 @@
         function renderSystemsActivated() {
             return `
                 <div class="question-section">
-                    <label class="question-label">Did any systems activate today?</label>
+                    <label class="question-label">Did any of the usual suspects show up today?</label>
                     <div class="checkbox-group">
                         ${[
                             '🎯 Perfectionism',
@@ -1004,6 +1071,15 @@
                             </label>
                         `).join('')}
                     </div>
+                    ${state.sessionData.systems && state.sessionData.systems.includes('✨ None - calm day') ? `
+                        <p style="margin-top: 12px; padding: 12px; background: #d1fae5; border-radius: 8px; color: #065f46; font-size: 14px;">
+                            A calm day! Those are worth celebrating.
+                        </p>
+                    ` : state.sessionData.systems && state.sessionData.systems.length > 0 && !state.sessionData.systems.includes('✨ None - calm day') ? `
+                        <p style="margin-top: 12px; padding: 12px; background: #e0e7ff; border-radius: 8px; color: #4338ca; font-size: 14px;">
+                            Got it. Let's see how you handled it.
+                        </p>
+                    ` : ''}
                 </div>
                 <div class="navigation-buttons">
                     <button onclick="prevStep()" class="nav-button back-button">Back</button>
@@ -1037,6 +1113,9 @@
                     </div>
 
                     ${state.sessionData.caughtIt === 'yes' ? `
+                        <p style="margin-top: 12px; padding: 12px; background: #d1fae5; border-radius: 8px; color: #065f46; font-size: 14px;">
+                            Hell yes! That awareness is the whole game right there.
+                        </p>
                         <div style="margin-top: 20px;">
                             <label class="question-label">Which tools did you use?</label>
                             <div class="checkbox-group">
@@ -1057,11 +1136,14 @@
                             </div>
                         </div>
                     ` : state.sessionData.caughtIt === 'no' ? `
+                        <p style="margin-top: 12px; padding: 12px; background: #e0e7ff; border-radius: 8px; color: #4338ca; font-size: 14px;">
+                            That's okay. The pattern was faster than you this time. Happens.
+                        </p>
                         <div class="expandable-text" style="margin-top: 16px;">
                             <div class="expand-toggle" onclick="toggleExpand('missedNote')">
-                                📝 What do you notice about missing it?
+                                📝 Notice anything about missing it?
                             </div>
-                            <textarea id="missedNote" class="hidden" placeholder="Any insights...">${state.sessionData.missedNote || ''}</textarea>
+                            <textarea id="missedNote" class="hidden" placeholder="Any insights about what made it hard to catch...">${state.sessionData.missedNote || ''}</textarea>
                         </div>
                     ` : ''}
                 </div>
@@ -1131,17 +1213,34 @@
 
         function renderEveningSummary() {
             completeSession();
+            
+            // Build personalized message based on their day
+            let message = "";
+            const hadActivation = state.sessionData.systems && state.sessionData.systems.length > 0 && !state.sessionData.systems.includes('✨ None - calm day');
+            
+            if (hadActivation && state.sessionData.caughtIt === 'yes') {
+                message = "You caught yourself when it mattered. That's real progress. ";
+                if (state.sessionData.toolsUsed && state.sessionData.toolsUsed.length > 0) {
+                    message += "You used your tools. ";
+                }
+                message += "You're building the skill.";
+            } else if (hadActivation && state.sessionData.caughtIt === 'no') {
+                message = "The pattern was faster than you today. That happens. You're still showing up, still learning. Tomorrow's another shot at it.";
+            } else {
+                message = "A calm day is worth acknowledging. You handled what came your way.";
+            }
+            
             return `
                 <div class="question-section">
-                    <h2>✅ Evening Check-in Complete!</h2>
-                    <p style="color: #666; margin: 16px 0;">
-                        You showed up for yourself today. That matters.
+                    <h2>✅ You showed up today</h2>
+                    <p style="color: #666; margin: 16px 0; font-size: 16px;">
+                        ${message}
                     </p>
                     <div class="mantra-box">
-                        "My worth is not determined by perfect performance. I am still a good person."
+                        "You did the best you can today! You are only human. You are good enough, just existing."
                     </div>
-                    <p style="font-size: 14px; color: #666;">
-                        Rest well tonight. Tomorrow is a new day.
+                    <p style="font-size: 14px; color: #666; margin-top: 16px;">
+                        Rest well. Tomorrow's a new day.
                     </p>
                 </div>
                 <div class="navigation-buttons">
@@ -1175,24 +1274,24 @@
             return `
                 <div class="home-icon" onclick="confirmExit()">🏠</div>
                 <div class="card">
-                    <h2>What's happening right now?</h2>
-                    <p class="subtitle">Select what you're experiencing</p>
+                    <h2>I'm here with you</h2>
+                    <p class="subtitle">What's happening right now?</p>
                     <div class="button-group">
                         <button onclick="selectActivationType('🎯 Perfectionism')">
                             <span class="button-icon">🎯</span>
-                            <span>Perfectionism attack</span>
+                            <span>Perfect Pete is attacking</span>
                         </button>
                         <button onclick="selectActivationType('💔 Rejection')">
                             <span class="button-icon">💔</span>
-                            <span>Rejection/approval-seeking pain</span>
+                            <span>Approval-scanning / feeling rejected</span>
                         </button>
                         <button onclick="selectActivationType('🌀 Habit Urge')">
                             <span class="button-icon">🌀</span>
-                            <span>Having a habit urge (before)</span>
+                            <span>Having a habit urge</span>
                         </button>
                         <button onclick="selectActivationType('😔 Already Engaged')">
                             <span class="button-icon">😔</span>
-                            <span>Already engaged in habit (after)</span>
+                            <span>Already engaged in habit</span>
                         </button>
                     </div>
                 </div>
@@ -1295,7 +1394,10 @@
             return `
                 <div class="question-section">
                     <h3>C - CAPTURE (30 seconds)</h3>
-                    <label class="question-label">Where do you feel this in your body?</label>
+                    <p style="color: #666; margin-bottom: 12px;">
+                        Let's locate what you're feeling in your body.
+                    </p>
+                    <label class="question-label">Where do you feel this?</label>
                     <div class="body-map">
                         ${['Chest', 'Jaw', 'Heart', 'Stomach', 'Shoulders', 'Throat', 'Head', 'Other'].map(part => `
                             <div class="body-part ${(state.sessionData.bodyParts || []).includes(part) ? 'selected' : ''}"
@@ -1317,6 +1419,11 @@
                             `).join('')}
                         </div>
                     </div>
+                    ${(state.sessionData.bodyParts && state.sessionData.bodyParts.length > 0) || (state.sessionData.sensations && state.sessionData.sensations.length > 0) ? `
+                        <p style="margin-top: 12px; padding: 12px; background: #e0e7ff; border-radius: 8px; color: #4338ca; font-size: 14px;">
+                            Good. You're noticing it. That's the first step.
+                        </p>
+                    ` : ''}
                 </div>
                 <div class="navigation-buttons">
                     <button onclick="prevStep()" class="nav-button back-button">Back</button>
@@ -1330,17 +1437,17 @@
                 <div class="question-section">
                     <h3>A - ASSUAGE (1-2 minutes)</h3>
                     <p style="color: #666; margin-bottom: 20px;">
-                        Let's physically regulate and soothe your nervous system
+                        Let's physically calm your nervous system. I'm here with you.
                     </p>
                     
                     <div class="breathing-circle">Breathe</div>
                     
                     <div class="info-box">
-                        <strong>Try this now:</strong>
+                        <strong>Do this now:</strong>
                         <ul style="margin-top: 8px; margin-left: 20px;">
-                            <li>Take 3 deep breaths</li>
+                            <li>Take 3 deep breaths - in through nose, out through mouth</li>
                             <li>Feel your feet on the floor</li>
-                            <li>Put your hand on your chest</li>
+                            <li>Put your hand on your chest and feel your heartbeat</li>
                         </ul>
                     </div>
 
@@ -1351,7 +1458,7 @@
                     </div>
 
                     <p style="font-size: 14px; color: #666; text-align: center; margin-top: 16px;">
-                        Take your time. Click Next when you're ready.
+                        Take your time. No rush. Click Next when you're ready.
                     </p>
                 </div>
                 <div class="navigation-buttons">
