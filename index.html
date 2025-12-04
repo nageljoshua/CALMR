@@ -571,12 +571,11 @@
             
             return `
                 <div class="card">
-                    <h1>CALMR Check-In</h1>
-                    <p class="subtitle">Your daily self-worth accountability system</p>
-                    
+                    <h1>Hey Josh! 👋</h1>
+                    <p class="subtitle">Your daily check-in buddy</p>
                     ${hasInProgress ? `
                         <div class="info-box">
-                            You have an in-progress session from ${new Date(state.inProgressSession.timestamp).toLocaleString()}
+                            You've got an in-progress session from ${new Date(state.inProgressSession.timestamp).toLocaleString()} Want to pick up where you left off?
                             <div style="margin-top: 12px;">
                                 <button onclick="resumeSession()" style="background: #3b82f6; padding: 8px 16px; font-size: 14px;">
                                     Resume Session
@@ -750,7 +749,7 @@
                     ${showText ? `
                         <div style="margin-top: 16px;">
                             <p style="font-size: 14px; color: #4338ca; margin-bottom: 8px;">
-                                Got it. What's still with you?
+                                Got it. Let's acknowledge that - What's still with you?
                             </p>
                             <textarea id="carryoverNote" placeholder="Brief note about what you're still feeling...">${state.sessionData.carryoverNote || ''}</textarea>
                         </div>
@@ -776,10 +775,10 @@
                     </p>
                     <div class="checkbox-group">
                         ${[
-                            'Stressful meetings/events',
+                            'Stressful to-do list',
                             'Social situations',
-                            'Deadline pressure',
-                            'Family stress',
+                            'Received feedback or undesirable responses',
+                            'I made a mistake',
                             'Body/appearance concerns'
                         ].map(trigger => `
                             <label class="checkbox-item">
@@ -815,17 +814,17 @@
 
             return `
                 <div class="question-section">
-                    <label class="question-label">Let's prepare for today's challenges</label>
+                    <label class="question-label">Alright, let's get you ready</label>
                     <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-                        You identified some potential triggers. Here's how to meet them:
+                        Here's how to meet today's challenges:
                     </p>
                     
-                    ${triggers.includes('Stressful meetings/events') ? `
+                    ${triggers.includes('Stressful to-do list') ? `
                         <div style="padding: 16px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; margin-bottom: 12px;">
-                            <strong>📅 For stressful meetings/events:</strong>
+                            <strong>📅 For stressful to-do list:</strong>
                             <p style="font-size: 14px; margin-top: 8px; color: #92400e;">
-                                "If perfectionism hits, I'll remember: my worth isn't determined by avoiding all mistakes. 
-                                I can catch myself and use the feedback reality check."
+                                "If Perfect Pete shows up saying 'you need to do all these things', I'll ask if an outsider would think I am being 'extra'.
+                                Instead, what would happen if this didn't get done? What is 'good enough' and what can be really set aside for another time?"
                             </p>
                         </div>
                     ` : ''}
@@ -835,27 +834,26 @@
                             <strong>👥 For social situations:</strong>
                             <p style="font-size: 14px; margin-top: 8px; color: #1e40af;">
                                 "If I start approval-scanning, I'll remember: I can just be here existing. 
-                                Their behavior is situational, not about my worth. I don't have to prove anything."
+                                Their behavior is situational, not about my worth. I don't have to prove anything to anyone."
                             </p>
                         </div>
                     ` : ''}
 
-                    ${triggers.includes('Deadline pressure') ? `
+                    ${triggers.includes('Received feedback or undesirable responses') ? `
                         <div style="padding: 16px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; margin-bottom: 12px;">
-                            <strong>⏰ For deadline pressure:</strong>
+                            <strong>🗣 Received feedback or undesirable responses:</strong>
                             <p style="font-size: 14px; margin-top: 8px; color: #92400e;">
-                                "If overwhelm hits, I'll ask: Would an outsider think I'm being extra? 
-                                What really happens if this isn't perfect? Good enough is often wiser."
+                                "If I feel attacked, I can ask 'What really happened or was said?' 'What did I interpret it as saying?' and 'What would an outside observer say about it?'
+                                Further, 'How much of what happened is more about them than me?'"
                             </p>
                         </div>
                     ` : ''}
 
                     ${triggers.includes('Family stress') ? `
                         <div style="padding: 16px; background: #e0e7ff; border-left: 4px solid #667eea; border-radius: 8px; margin-bottom: 12px;">
-                            <strong>👨‍👩‍👧 For family stress:</strong>
+                            <strong>🛠️ I made a mistake:</strong>
                             <p style="font-size: 14px; margin-top: 8px; color: #4338ca;">
-                                "If things get tense, I'll pause and breathe. I can handle hard things. 
-                                My worth isn't determined by controlling everyone's experience."
+                                "Making mistakes is human. I did the best I could with my capabilities. "
                             </p>
                         </div>
                     ` : ''}
@@ -886,7 +884,7 @@
                 <div class="question-section">
                     <label class="question-label">What's one thing you're looking forward to today?</label>
                     <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
-                        Even small things count. What's got a spark of good in it?
+                        Even small things count! What's got a spark of good in it?
                     </p>
                     <div class="radio-group">
                         ${[
@@ -911,7 +909,7 @@
                         </div>
                     ` : state.sessionData.lookingForward && state.sessionData.lookingForward !== 'Other' ? `
                         <p style="margin-top: 12px; padding: 12px; background: #e0e7ff; border-radius: 8px; color: #4338ca; font-size: 14px;">
-                            Nice. Hold onto that today.
+                            Nice! That's something good to Hhld onto today.
                         </p>
                     ` : ''}
                 </div>
@@ -976,15 +974,16 @@
             
             return `
                 <div class="question-section">
-                    <h2>✅ Nice work, Josh</h2>
+                    <h2>✅ Nice work, Josh!</h2>
                     <p style="color: #666; margin: 16px 0; font-size: 16px;">
                         ${message}
                     </p>
                     <div class="mantra-box">
-                        "I am okay. I am good enough. I am trying my best. I am human."
+                        "I'm doing the best I can. I'm good enough, right now, as I am."
                     </div>
                     <p style="font-size: 14px; color: #666; margin-top: 16px;">
-                        Go do your thing today.
+                        Your CALMR tools are ready when you need them today. Come back tonight to check in on how it went.
+                        Go do your thing today!
                     </p>
                 </div>
                 <div class="navigation-buttons">
@@ -1077,7 +1076,7 @@
                         </p>
                     ` : state.sessionData.systems && state.sessionData.systems.length > 0 && !state.sessionData.systems.includes('✨ None - calm day') ? `
                         <p style="margin-top: 12px; padding: 12px; background: #e0e7ff; border-radius: 8px; color: #4338ca; font-size: 14px;">
-                            Got it. Let's see how you handled it.
+                            Okay, they showed up. Let's see how you handled it.
                         </p>
                     ` : ''}
                 </div>
@@ -1393,7 +1392,7 @@
         function renderCapture() {
             return `
                 <div class="question-section">
-                    <h3>C - CAPTURE (30 seconds)</h3>
+                    <h3>C - CAPTURE</h3>
                     <p style="color: #666; margin-bottom: 12px;">
                         Let's locate what you're feeling in your body.
                     </p>
@@ -1916,7 +1915,7 @@
                     <div style="padding: 16px; background: #f8fafc; border-radius: 8px; margin: 20px 0;">
                         <strong>Evidence reminder:</strong>
                         <p style="font-size: 14px; color: #666; margin-top: 8px;">
-                            Think of one person who genuinely cares about you: Franni, your kids, a close friend
+                            Think of one person who genuinely cares about you: your spouse, your kids, a close friend
                         </p>
                     </div>
 
