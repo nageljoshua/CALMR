@@ -833,8 +833,8 @@
                         <div style="padding: 16px; background: #dbeafe; border-left: 4px solid #3b82f6; border-radius: 8px; margin-bottom: 12px;">
                             <strong>👥 For social situations:</strong>
                             <p style="font-size: 14px; margin-top: 8px; color: #1e40af;">
-                                "If I start approval-scanning, I'll remember: I can just be here existing. 
-                                Their behavior is situational, not about my worth. I don't have to prove anything to anyone."
+                                "If I start approval-scanning, I'll remember: I can just be here existing.
+                                Their behavior is situational, not about my adequacy. I don't have to prove anything to anyone."
                             </p>
                         </div>
                     ` : ''}
@@ -862,8 +862,8 @@
                         <div style="padding: 16px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; margin-bottom: 12px;">
                             <strong>🪞 For body/appearance concerns:</strong>
                             <p style="font-size: 14px; margin-top: 8px; color: #92400e;">
-                                "If body shame hits, I'll recognize this is perfectionism trying to prevent judgment. 
-                                My worth isn't determined by appearance. I can investigate the urge if it comes."
+                                "If body shame hits, I'll recognize this is perfectionism trying to prevent judgment.
+                                I'm adequate regardless of appearance. I can investigate the urge if it comes."
                             </p>
                         </div>
                     ` : ''}
@@ -1255,9 +1255,11 @@
 
             // Handle different activation types
             const activationType = state.sessionData.activationType;
-            
+
             if (activationType === '🎯 Perfectionism') {
                 return renderPerfectionismFlow();
+            } else if (activationType === '💔 Relationship Conflict') {
+                return renderRelationshipConflictFlow();
             } else if (activationType === '💔 Rejection') {
                 return renderRejectionFlow();
             } else if (activationType === '🌀 Habit Urge') {
@@ -1279,6 +1281,10 @@
                         <button onclick="selectActivationType('🎯 Perfectionism')">
                             <span class="button-icon">🎯</span>
                             <span>Perfect Pete is attacking</span>
+                        </button>
+                        <button onclick="selectActivationType('💔 Relationship Conflict')">
+                            <span class="button-icon">💔</span>
+                            <span>Fight/disagreement with Franni</span>
                         </button>
                         <button onclick="selectActivationType('💔 Rejection')">
                             <span class="button-icon">💔</span>
@@ -1315,6 +1321,29 @@
                         <div class="progress-fill" style="width: ${progress}%"></div>
                     </div>
                     <h2>CALMR: Perfectionism</h2>
+                    ${steps[state.currentStep - 1]()}
+                </div>
+            `;
+        }
+
+        function renderRelationshipConflictFlow() {
+            const steps = [
+                renderCapture,
+                renderAssuage,
+                renderLabelRelationshipConflict,
+                renderModifyRelationshipConflict,
+                renderReassure
+            ];
+
+            const progress = ((state.currentStep) / steps.length) * 100;
+
+            return `
+                <div class="home-icon" onclick="confirmExit()">🏠</div>
+                <div class="card">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                    <h2>CALMR: Relationship Conflict</h2>
                     ${steps[state.currentStep - 1]()}
                 </div>
             `;
@@ -1451,7 +1480,7 @@
                     </div>
 
                     <div class="mantra-box">
-                        "I am okay. I am good enough."
+                        "I am okay. I'm capable enough to handle this."
                         <br><br>
                         "This is hard, and I'm handling it."
                     </div>
@@ -1502,6 +1531,35 @@
 
         function renderLabelHabit() {
             return renderLabelPerfectionism(); // Same feelings apply
+        }
+
+        function renderLabelRelationshipConflict() {
+            return `
+                <div class="question-section">
+                    <h3>L - LABEL (30 sec - 1 min)</h3>
+                    <label class="question-label">What are you feeling right now?</label>
+                    <div class="checkbox-group">
+                        ${['Hurt', 'Defensive', 'Ashamed', 'Anxious', 'Angry', 'Frustrated', 'Desperate to fix it'].map(feeling => `
+                            <label class="checkbox-item">
+                                <input type="checkbox"
+                                       ${(state.sessionData.feelings || []).includes(feeling) ? 'checked' : ''}
+                                       onchange="toggleCheckbox('feelings', '${feeling}')">
+                                <span>${feeling}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <div class="expandable-text" style="margin-top: 16px;">
+                        <div class="expand-toggle" onclick="toggleExpand('relationshipNote')">
+                            📝 What happened? (optional - just for you)
+                        </div>
+                        <textarea id="relationshipNote" class="hidden" placeholder="Brief note about the conflict...">${state.sessionData.relationshipNote || ''}</textarea>
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="prevStep()" class="nav-button back-button">Back</button>
+                    <button onclick="captureTextAndNext('relationshipNote', 'relationshipNote')" class="nav-button">Next</button>
+                </div>
+            `;
         }
 
         function renderModifyPerfectionism() {
@@ -1714,6 +1772,76 @@
             `;
         }
 
+        function renderModifyRelationshipConflict() {
+            return `
+                <div class="question-section">
+                    <h3>M - MODIFY (3-5 minutes)</h3>
+                    <p style="color: #666; margin-bottom: 16px;">
+                        Choose how you want to work through this:
+                    </p>
+
+                    <div class="button-group">
+                        <button onclick="openClaudeWithContext()" style="background: #3b82f6;">
+                            <span class="button-icon">💬</span>
+                            <span>Start a chat with Claude</span>
+                        </button>
+                    </div>
+
+                    <p style="text-align: center; margin: 16px 0; color: #666;">— or work through it here —</p>
+
+                    <div style="padding: 16px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; margin-bottom: 12px;">
+                        <strong>Her upset ≠ Your inadequacy</strong>
+                        <p style="font-size: 14px; margin-top: 8px; color: #92400e;">
+                            "She's upset with me right now. That doesn't mean I'm a terrible husband or inadequate. It means we're having a hard moment."
+                        </p>
+                    </div>
+
+                    <div style="padding: 16px; background: #dbeafe; border-left: 4px solid #3b82f6; border-radius: 8px; margin-bottom: 12px;">
+                        <strong>Separate the mistake from catastrophe</strong>
+                        <p style="font-size: 14px; margin-top: 8px; color: #1e40af;">
+                            "I did/said something that hurt her. That's true. AND I can repair this. One mistake doesn't mean I'm failing as a partner."
+                        </p>
+                    </div>
+
+                    <div style="padding: 16px; background: #e0e7ff; border-left: 4px solid #667eea; border-radius: 8px; margin-bottom: 12px;">
+                        <strong>Time-scale perspective</strong>
+                        <p style="font-size: 14px; margin-top: 8px; color: #4338ca;">
+                            "This feels enormous right now. In a week, we'll have worked through this. We've been through conflicts before and come out okay."
+                        </p>
+                    </div>
+
+                    <div style="padding: 16px; background: #f8fafc; border-radius: 8px; margin-top: 20px;">
+                        <strong>What am I trying to do right now?</strong>
+                        <div class="checkbox-group" style="margin-top: 12px;">
+                            ${[
+                                'Make her stop being upset (control)',
+                                'Actually understand her perspective',
+                                'Defend myself from feeling inadequate',
+                                'Rush to fix without processing',
+                                'Self-flagellate to prove I care',
+                                'Be present for repair'
+                            ].map(behavior => `
+                                <label class="checkbox-item">
+                                    <input type="checkbox"
+                                           ${(state.sessionData.conflictBehaviors || []).includes(behavior) ? 'checked' : ''}
+                                           onchange="toggleCheckbox('conflictBehaviors', '${behavior}')">
+                                    <span>${behavior}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="info-box" style="margin-top: 16px;">
+                        <strong>Remember:</strong> You can tolerate her being upset without it meaning you're inadequate. Repair is possible.
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button onclick="prevStep()" class="nav-button back-button">Back</button>
+                    <button onclick="nextStep()" class="nav-button">Next</button>
+                </div>
+            `;
+        }
+
         function renderModifyHabitUrge() {
             return `
                 <div class="question-section">
@@ -1836,8 +1964,8 @@
                     <div class="info-box" style="margin-top: 16px;">
                         <strong>Perfectionism Interrupt:</strong>
                         <ul style="margin-top: 8px; margin-left: 20px;">
-                            <li>My worth isn't determined by perfect habit control</li>
-                            <li>I am still a good person</li>
+                            <li>I'm capable of managing my life even with this habit</li>
+                            <li>I am still adequate as a person</li>
                             <li>This doesn't erase my progress</li>
                         </ul>
                     </div>
@@ -1858,7 +1986,7 @@
                     </p>
 
                     <div class="mantra-box">
-                        "My worth is not determined by perfect habit control. I am still a good person."
+                        "I'm capable of managing my life even with this setback. This doesn't make me inadequate."
                     </div>
 
                     <label class="question-label" style="margin-top: 20px;">What do you need right now?</label>
@@ -1891,21 +2019,23 @@
 
         function renderReassure() {
             const activationType = state.sessionData.activationType;
-            let mantra = "I am still a good person. I am good enough.";
-            
+            let mantra = "I'm capable enough. I'm adequate as I am.";
+
             if (activationType === '🎯 Perfectionism') {
-                mantra = "My worth is not determined by avoiding all mistakes. I am good enough.";
+                mantra = "I'm competent even when I make mistakes. Mistakes don't mean I'm inadequate.";
+            } else if (activationType === '💔 Relationship Conflict') {
+                mantra = "I'm a capable partner who made a mistake, not an inadequate partner who got revealed. We can work through this.";
             } else if (activationType === '💔 Rejection') {
-                mantra = "My worth is not determined by others' approval. I am good enough.";
+                mantra = "I'm adequate even when not everyone likes me. I don't need universal approval to be okay.";
             } else if (activationType === '🌀 Habit Urge') {
-                mantra = "My worth is not determined by perfect habit control. I am good enough.";
+                mantra = "I'm capable of handling my life even when I engage in the habit. This doesn't mean I'm inadequate or out of control.";
             }
 
             return `
                 <div class="question-section">
                     <h3>R - REASSURE (1 minute)</h3>
                     <p style="color: #666; margin-bottom: 16px;">
-                        Ground back in your worth after the cognitive work
+                        Ground yourself after the cognitive work
                     </p>
 
                     <div class="mantra-box">
@@ -1915,7 +2045,7 @@
                     <div style="padding: 16px; background: #f8fafc; border-radius: 8px; margin: 20px 0;">
                         <strong>Evidence reminder:</strong>
                         <p style="font-size: 14px; color: #666; margin-top: 8px;">
-                            Think of one person who genuinely cares about you: your spouse, your kids, a close friend
+                            Think of evidence that you're actually adequate: one thing you've handled well recently, one person who values you, one area where you're clearly competent
                         </p>
                     </div>
 
@@ -2002,6 +2132,10 @@
                             <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                                 <span>🎯 Perfectionism:</span>
                                 <strong>${stats.perfectionism}</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>💔 Relationship Conflict:</span>
+                                <strong>${stats.relationshipConflict}</strong>
                             </div>
                             <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                                 <span>💔 Rejection/Approval:</span>
@@ -2094,6 +2228,7 @@
                 eveningCheckins: 0,
                 activations: 0,
                 perfectionism: 0,
+                relationshipConflict: 0,
                 rejection: 0,
                 habitUrge: 0,
                 afterHabit: 0
@@ -2106,6 +2241,7 @@
                     stats.activations++;
                     const activationType = session.data.activationType;
                     if (activationType === '🎯 Perfectionism') stats.perfectionism++;
+                    if (activationType === '💔 Relationship Conflict') stats.relationshipConflict++;
                     if (activationType === '💔 Rejection') stats.rejection++;
                     if (activationType === '🌀 Habit Urge') stats.habitUrge++;
                     if (activationType === '😔 Already Engaged') stats.afterHabit++;
